@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+  id              Int      @id @default(autoincrement())
+  slug            String   @unique
+  title           String
+  excerpt         String
+  content         String
+  metaTitle       String
+  metaDescription String
+  cover           String
+  category        String
+  tags            String   @default("")
+  readingMinutes  Int      @default(5)
+  faq             String   @default("[]")
+  featured        Boolean  @default(false)
+  published       Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Faq {
+  id        Int     @id @default(autoincrement())
+  question  String
+  answer    String
+  category  String  @default("General")
+  order     Int     @default(0)
+  published Boolean @default(true)
+}
+
+model Setting {
+  key   String @id
+  value String
+}
+
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String?
+  childAge  String?
+  message   String
+  handled   Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model PageView {
+  id        Int      @id @default(autoincrement())
+  path      String
+  sessionId String
+  referrer  String?
+  createdAt DateTime @default(now())
+}
+
+model ChatLog {
+  id        Int      @id @default(autoincrement())
+  role      String
+  content   String
+  sessionId String
+  provider  String?
+  createdAt DateTime @default(now())
+}
