@@ -147,7 +147,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     NAV_ITEMS.find((i) => isActive(pathname, i.href))?.label ?? "Admin";
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-cream lg:pl-64">
       <AdminStyleTag />
 
       {/* Desktop sidebar */}
@@ -229,7 +229,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       </header>
 
       {/* Content */}
-      <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:ml-64 lg:px-10 lg:py-8">
+      <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
         {children}
       </main>
     </div>

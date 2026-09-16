@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { VisitTracker } from "@/components/layout/VisitTracker";
 import { ChatbotWidget } from "@/components/chatbot/ChatbotWidget";
+import { TempDownloadButton } from "@/components/shared/TempDownloadButton";
 import { childCareJsonLd } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 
@@ -10,7 +11,7 @@ export default function SiteLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="flex min-h-screen flex-col bg-cream">
+    <div className="flex min-h-screen flex-col overflow-x-clip bg-cream">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(childCareJsonLd()) }}
@@ -31,6 +32,8 @@ export default function SiteLayout({
 
       <Footer />
       <ChatbotWidget />
+      {/* ⚠️ TEMPORARY (preview only) — remove after deploy */}
+      <TempDownloadButton />
       <VisitTracker />
 
       {/* NAP consistency for local SEO (screen-reader summary) */}

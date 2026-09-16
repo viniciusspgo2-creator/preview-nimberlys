@@ -12,6 +12,7 @@ import {
   Eye,
   EyeOff,
   KeyRound,
+  PlugZap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,6 +34,7 @@ import {
   PageHeader,
   adminCard,
   GEMINI_MODELS,
+  GEMINI_CUSTOM,
 } from "./admin-shared";
 
 type Settings = Record<string, string>;
@@ -79,6 +81,11 @@ export function SettingsView() {
   // security
   const [newPw, setNewPw] = React.useState("");
   const [confirmPw, setConfirmPw] = React.useState("");
+
+  // chatbot: custom model id + connection test
+  const [customModel, setCustomModel] = React.useState(false);
+  const [testing, setTesting] = React.useState(false);
+  const [testResult, setTestResult] = React.useState<{ ok: boolean; message: string } | null>(null);
 
   const [savingTab, setSavingTab] = React.useState<string | null>(null);
 
@@ -131,6 +138,9 @@ export function SettingsView() {
             s
           )
         );
+        // If the saved model is not one of the presets, show the custom input.
+        const savedModel = (s.gemini_model ?? "").trim();
+        setCustomModel(savedModel.length > 0 && !GEMINI_MODELS.includes(savedModel as (typeof GEMINI_MODELS)[number]));
       })
       .catch((e: Error) => {
         if (!active) return;
@@ -161,6 +171,38 @@ export function SettingsView() {
       }
     } finally {
       setSavingTab(null);
+    }
+  }
+
+  async function testGemini() {
+    if (testing) return;
+    setTesting(true);
+    setTestResult(null);
+    try {
+      const res = await fetch("/api/admin/test-gemini", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          key: chat.gemini_api_key?.trim() || undefined,
+          model: chat.gemini_model?.trim() || undefined,
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        message?: string;
+      };
+      setTestResult({
+        ok: Boolean(res.ok && data.ok),
+        message: data.message || "Could not reach the test endpoint. Try again.",
+      });
+    } catch {
+      setTestResult({
+        ok: false,
+        message: "Could not reach the test endpoint. Try again.",
+      });
+    } finally {
+      setTesting(false);
     }
   }
 
@@ -376,23 +418,86 @@ export function SettingsView() {
               </div>
             </Field>
 
-            <Field label="Gemini model" htmlFor="s-gemini_model">
-              <Select
-                value={chat.gemini_model || GEMINI_MODELS[0]}
-                onValueChange={(v) => setChat((s) => ({ ...s, gemini_model: v }))}
-              >
-                <SelectTrigger id="s-gemini_model" className="w-full sm:w-72">
-                  <SelectValue placeholder="Select model" />
-                </SelectTrigger>
-                <SelectContent>
-                  {GEMINI_MODELS.map((m) => (
-                    <SelectItem key={m} value={m}>
-                      {m}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <Field
+              label="Gemini model"
+              htmlFor="s-gemini_model"
+              hint="Pick a ready-made model, or choose “Custom model id…” and paste any model id exactly as shown in Google AI Studio."
+            >
+              {customModel ? (
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Input
+                    id="s-gemini_model"
+                    className={cn(inputCls, "font-mono text-sm")}
+                    placeholder="e.g. gemini-2.5-flash"
+                    autoComplete="off"
+                    value={chat.gemini_model ?? ""}
+                    onChange={(e) => setChat((s) => ({ ...s, gemini_model: e.target.value }))}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="shrink-0 rounded-full font-semibold"
+                    onClick={() => {
+                      setCustomModel(false);
+                      setChat((s) => ({ ...s, gemini_model: GEMINI_MODELS[0] }));
+                    }}
+                  >
+                    Choose from list
+                  </Button>
+                </div>
+              ) : (
+                <Select
+                  value={chat.gemini_model || GEMINI_MODELS[0]}
+                  onValueChange={(v) => {
+                    if (v === GEMINI_CUSTOM) {
+                      setCustomModel(true);
+                      setChat((s) => ({ ...s, gemini_model: "" }));
+                    } else {
+                      setChat((s) => ({ ...s, gemini_model: v }));
+                    }
+                  }}
+                >
+                  <SelectTrigger id="s-gemini_model" className="w-full sm:w-72">
+                    <SelectValue placeholder="Select model" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {GEMINI_MODELS.map((m) => (
+                      <SelectItem key={m} value={m}>
+                        {m}
+                      </SelectItem>
+                    ))}
+                    <SelectItem value={GEMINI_CUSTOM}>Custom model id…</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
             </Field>
+
+            <div className="space-y-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={testGemini}
+                disabled={testing}
+                className="rounded-full font-semibold"
+              >
+                {testing ? <LoaderCircle className="size-4 animate-spin" /> : <PlugZap className="size-4" />}
+                Test connection
+              </Button>
+              <p className="text-xs text-ink-faint">
+                Sends a tiny “ping” to Google using the key and model above and shows exactly what went wrong if it fails.
+              </p>
+              {testResult ? (
+                <p
+                  role="status"
+                  className={cn(
+                    "rounded-xl px-4 py-3 text-sm font-semibold leading-relaxed",
+                    testResult.ok ? "bg-green-soft text-green-pop" : "bg-red-soft text-red-pop"
+                  )}
+                >
+                  {testResult.message}
+                </p>
+              ) : null}
+            </div>
 
             <Field
               label="Quick replies"

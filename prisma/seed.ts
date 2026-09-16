@@ -123,37 +123,26 @@ async function main() {
     for (const f of faqs) await db.faq.create({ data: f });
   }
 
-  // Blog posts
+  // Blog posts — create-if-missing ONLY (never overwrite admin edits on redeploys)
   for (const p of seedPosts) {
+    const data = {
+      slug: p.slug,
+      title: p.title,
+      excerpt: p.excerpt,
+      content: p.content,
+      metaTitle: p.metaTitle,
+      metaDescription: p.metaDescription,
+      cover: p.cover,
+      category: p.category,
+      tags: p.tags.join(", "),
+      readingMinutes: p.readingMinutes,
+      faq: JSON.stringify(p.faq),
+      featured: p.featured,
+    };
     await db.post.upsert({
       where: { slug: p.slug },
-      update: {
-        title: p.title,
-        excerpt: p.excerpt,
-        content: p.content,
-        metaTitle: p.metaTitle,
-        metaDescription: p.metaDescription,
-        cover: p.cover,
-        category: p.category,
-        tags: p.tags.join(", "),
-        readingMinutes: p.readingMinutes,
-        faq: JSON.stringify(p.faq),
-        featured: p.featured,
-      },
-      create: {
-        slug: p.slug,
-        title: p.title,
-        excerpt: p.excerpt,
-        content: p.content,
-        metaTitle: p.metaTitle,
-        metaDescription: p.metaDescription,
-        cover: p.cover,
-        category: p.category,
-        tags: p.tags.join(", "),
-        readingMinutes: p.readingMinutes,
-        faq: JSON.stringify(p.faq),
-        featured: p.featured,
-      },
+      update: {},
+      create: data,
     });
   }
 

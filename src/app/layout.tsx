@@ -25,6 +25,10 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+/* Settings come from the database (root layout) — render every page
+   per-request so Admin edits appear on the public site immediately. */
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getPublicSettings();
   return {
