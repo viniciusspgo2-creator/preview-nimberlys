@@ -14,6 +14,7 @@ import { Gallery } from "@/components/home/Gallery";
 import { FaqPreview } from "@/components/home/FaqPreview";
 import { LocationPreview } from "@/components/home/LocationPreview";
 import { FinalCta } from "@/components/home/FinalCta";
+import { TempZipButton } from "@/components/TempZipButton";
 
 export default function HomePage() {
   return (
@@ -32,6 +33,7 @@ export default function HomePage() {
       <FaqPreview />
       <LocationPreview />
       <FinalCta />
+      <TempZipButton />
     </>
   );
 }

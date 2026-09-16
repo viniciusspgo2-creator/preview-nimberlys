@@ -44,7 +44,7 @@ Vercel → seu projeto → **Settings → Environment Variables** → adicione:
 | `ADMIN_SECRET` | ✅ | String aleatória gerada por você (comando abaixo) |
 | `GEMINI_API_KEY` | Recomendada | <https://aistudio.google.com/apikey> → "Create API key" (sem restrição de site) |
 | `NEXT_PUBLIC_SITE_URL` | Opcional | URL final do site, ex. `https://www.seudominio.com` |
-| `GEMINI_MODEL` | Opcional | Deixe vazio (padrão: `gemini-2.5-flash`) |
+| `GEMINI_MODEL` | Opcional | Deixe vazio (padrão: `gemini-flash-latest`) |
 
 > ⚠️ Marque as mesmas variáveis para **Production E Preview** (a caixinha de ambiente
 > na Vercel permite selecionar os dois — selecione os dois).
@@ -69,6 +69,9 @@ Vercel → seu projeto → **Settings → Environment Variables** → adicione:
 1. Abra `https://seu-site.vercel.app/admin`
 2. Crie sua senha (mín. 8 caracteres) — ela é salva com hash seguro no banco.
 3. Para testar o chatbot: **Admin → Settings → Chatbot → "Test connection"**.
+4. O botão **"Download project"** (canto inferior esquerdo do painel) baixa o ZIP
+   atualizado do site — use-o para pegar o código mais recente a cada rodada de
+   ajustes. Ele só existe dentro do painel (visitantes não veem).
 
 ---
 
@@ -78,11 +81,22 @@ O banco usado no primeiro deploy nunca recebeu os artigos (o seed era um passo m
 Agora o **próprio build popula o banco** a cada deploy. Basta fazer o próximo deploy
 (com as variáveis corretas) e o blog/FAQs aparecem — nenhuma ação manual.
 
-## 🩺 Chatbot não respondia?
+## 🩺 Chatbot: "Model not found for this key"?
 
-Use o novo botão **"Test connection"** (Admin → Settings → Chatbot). Ele diz exatamente
-o que está errado: chave inválida, modelo inexistente, limite de cota, ou chave restrita
-a websites (o motivo mais comum — crie a chave no AI Studio **sem** restrições de site).
+Chaves novas do Google AI Studio geralmente só têm os modelos **Gemini 3 ou mais novos**
+(o `gemini-2.5-flash` antigo não existe mais para elas). O site já usa o alias
+`gemini-flash-latest` como padrão, que funciona nessas chaves. Para ver a lista exata
+dos modelos que a SUA chave aceita:
+
+1. **Admin → Settings → Chatbot**
+2. Cole/tenha a chave salva e clique em **"Load models for this key"** — o Google
+   responde com a lista exata (aparece agrupada no topo do seletor de modelo).
+3. Escolha um modelo do grupo verde e **salve**.
+4. Use **"Test connection"** para confirmar. Se der erro 404, a mensagem agora mostra
+   os modelos disponíveis para a sua chave.
+
+E se qualquer modelo falhar em produção, o chatbot tenta automaticamente o
+`gemini-flash-latest` antes de usar o assistente reserva — o Sunny nunca fica mudo.
 
 ---
 

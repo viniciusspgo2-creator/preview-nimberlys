@@ -6,10 +6,46 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const TIMEOUT_MS = 15_000;
-const DEFAULT_MODEL = "gemini-2.5-flash";
+const DEFAULT_MODEL = "gemini-flash-latest";
+
+/** Chat-capable model ids for a key (Google ListModels), newest first. */
+async function listAvailableModels(
+  key: string
+): Promise<string[]> {
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models?pageSize=1000&key=${encodeURIComponent(key)}`,
+      { cache: "no-store", signal: AbortSignal.timeout(TIMEOUT_MS) }
+    );
+    if (!res.ok) return [];
+    const data = (await res.json()) as {
+      models?: Array<{ name?: string; supportedGenerationMethods?: string[] }>;
+    };
+    return (data.models ?? [])
+      .filter(
+        (m) =>
+          typeof m.name === "string" &&
+          m.name.startsWith("models/gemini-") &&
+          (m.supportedGenerationMethods ?? []).includes("generateContent") &&
+          !/(embedding|aqa|imagen|image|tts|native-audio|live|transcribe|translate|robotics|computer-use|omni)/i.test(
+            m.name
+          )
+      )
+      .map((m) => (m.name as string).replace(/^models\//, ""))
+      .sort()
+      .reverse();
+  } catch {
+    return [];
+  }
+}
 
 /** Friendly diagnosis for a Gemini HTTP status code. */
-function diagnose(status: number, googleMessage: string, model: string): string {
+async function diagnose(
+  status: number,
+  googleMessage: string,
+  model: string,
+  key = ""
+): Promise<string> {
   switch (status) {
     case 400:
       return "API key not valid. Copy the whole key again from Google AI Studio (it starts with 'AIza').";
@@ -17,8 +53,15 @@ function diagnose(status: number, googleMessage: string, model: string): string 
       return "API key was rejected (401). Generate a new key in Google AI Studio and save it here.";
     case 403:
       return `Key was refused (403). Usually one of: the "Generative Language API" is not enabled for this key, or the key is restricted to specific websites. Create the key in Google AI Studio with NO website/referrer restrictions. (Google said: ${googleMessage})`;
-    case 404:
-      return `Model "${model}" was not found for this key. Choose one of the models from the dropdown (e.g. gemini-2.5-flash).`;
+    case 404: {
+      // Auto-probe which models this key CAN use so the owner sees real ids.
+      const available = await listAvailableModels(key);
+      const hint =
+        available.length > 0
+          ? ` Models available for this key: ${available.slice(0, 10).join(", ")}${available.length > 10 ? " …" : ""}.`
+          : " Click “Load models for this key” above the model list to see exactly which models your key supports. Fresh Google AI Studio keys usually only have Gemini 3+ models (e.g. gemini-flash-latest or gemini-3.5-flash).";
+      return `Model "${model}" is not available for this key.${hint}`;
+    }
     case 429:
       return "Free-tier quota reached (429). Wait a minute and test again — if it keeps failing, check quotas in Google AI Studio.";
     case 500:
@@ -111,7 +154,7 @@ export async function POST(req: Request) {
       }
       return NextResponse.json({
         ok: false,
-        message: diagnose(res.status, googleMessage, model),
+        message: await diagnose(res.status, googleMessage, model, key),
       });
     }
 

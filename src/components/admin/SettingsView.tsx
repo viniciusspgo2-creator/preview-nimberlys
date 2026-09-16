@@ -13,6 +13,8 @@ import {
   EyeOff,
   KeyRound,
   PlugZap,
+  ListRestart,
+  CheckCircle2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +25,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -86,6 +90,10 @@ export function SettingsView() {
   const [customModel, setCustomModel] = React.useState(false);
   const [testing, setTesting] = React.useState(false);
   const [testResult, setTestResult] = React.useState<{ ok: boolean; message: string } | null>(null);
+
+  // chatbot: models fetched live from Google for the configured key
+  const [availableModels, setAvailableModels] = React.useState<string[] | null>(null);
+  const [loadingModels, setLoadingModels] = React.useState(false);
 
   const [savingTab, setSavingTab] = React.useState<string | null>(null);
 
@@ -203,6 +211,51 @@ export function SettingsView() {
       });
     } finally {
       setTesting(false);
+    }
+  }
+
+  async function loadModels() {
+    if (loadingModels) return;
+    setLoadingModels(true);
+    try {
+      const res = await fetch("/api/admin/gemini-models", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          key: chat.gemini_api_key?.trim() || undefined,
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        models?: string[];
+        count?: number;
+        message?: string;
+      };
+      if (res.ok && data.ok && Array.isArray(data.models) && data.models.length > 0) {
+        const models = data.models;
+        setAvailableModels(models);
+        const current = (chat.gemini_model ?? "").trim();
+        if (!current || !models.includes(current)) {
+          setCustomModel(false);
+          setChat((s) => ({ ...s, gemini_model: models[0] }));
+          toast.success(`Loaded ${models.length} models for this key`, {
+            description: current
+              ? `“${current}” is not available for this key — switched to ${models[0]}.`
+              : `Selected ${models[0]} (newest). Remember to save.`,
+          });
+        } else {
+          toast.success(`Loaded ${models.length} models for this key`, {
+            description: `“${current}” is available and stays selected.`,
+          });
+        }
+      } else {
+        toast.error(data.message || "Could not load models. Try again.");
+      }
+    } catch {
+      toast.error("Could not reach the models endpoint. Try again.");
+    } finally {
+      setLoadingModels(false);
     }
   }
 
@@ -405,7 +458,11 @@ export function SettingsView() {
                   autoComplete="off"
                   className={cn(inputCls, "pr-11 font-mono text-sm")}
                   value={chat.gemini_api_key ?? ""}
-                  onChange={(e) => setChat((s) => ({ ...s, gemini_api_key: e.target.value }))}
+                  onChange={(e) => {
+                    setChat((s) => ({ ...s, gemini_api_key: e.target.value }));
+                    // A new key means a new model list — drop the stale one.
+                    if (availableModels) setAvailableModels(null);
+                  }}
                 />
                 <button
                   type="button"
@@ -421,14 +478,14 @@ export function SettingsView() {
             <Field
               label="Gemini model"
               htmlFor="s-gemini_model"
-              hint="Pick a ready-made model, or choose “Custom model id…” and paste any model id exactly as shown in Google AI Studio."
+              hint="Not sure which model your key supports? Click “Load models for this key” — it asks Google for the exact list. Or choose “Custom model id…” and paste any id exactly as shown in Google AI Studio."
             >
               {customModel ? (
                 <div className="flex flex-col gap-2 sm:flex-row">
                   <Input
                     id="s-gemini_model"
                     className={cn(inputCls, "font-mono text-sm")}
-                    placeholder="e.g. gemini-2.5-flash"
+                    placeholder="e.g. gemini-flash-latest"
                     autoComplete="off"
                     value={chat.gemini_model ?? ""}
                     onChange={(e) => setChat((s) => ({ ...s, gemini_model: e.target.value }))}
@@ -457,15 +514,36 @@ export function SettingsView() {
                     }
                   }}
                 >
-                  <SelectTrigger id="s-gemini_model" className="w-full sm:w-72">
+                  <SelectTrigger id="s-gemini_model" className="w-full sm:w-80">
                     <SelectValue placeholder="Select model" />
                   </SelectTrigger>
-                  <SelectContent>
-                    {GEMINI_MODELS.map((m) => (
-                      <SelectItem key={m} value={m}>
-                        {m}
-                      </SelectItem>
-                    ))}
+                  <SelectContent className="admin-scroll max-h-72">
+                    {availableModels && availableModels.length > 0 ? (
+                      <SelectGroup>
+                        <SelectLabel className="text-[0.7rem] font-extrabold uppercase tracking-wide text-green-pop">
+                          Available for your key ({availableModels.length})
+                        </SelectLabel>
+                        {availableModels.map((m) => (
+                          <SelectItem key={m} value={m} className="font-mono text-[0.8rem]">
+                            {m}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    ) : null}
+                    <SelectGroup>
+                      <SelectLabel className="text-[0.7rem] font-extrabold uppercase tracking-wide text-ink-faint">
+                        {availableModels && availableModels.length > 0
+                          ? "Other known models"
+                          : "Common models"}
+                      </SelectLabel>
+                      {GEMINI_MODELS.filter(
+                        (m) => !availableModels || !availableModels.includes(m)
+                      ).map((m) => (
+                        <SelectItem key={m} value={m} className="font-mono text-[0.8rem]">
+                          {m}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
                     <SelectItem value={GEMINI_CUSTOM}>Custom model id…</SelectItem>
                   </SelectContent>
                 </Select>
@@ -473,19 +551,44 @@ export function SettingsView() {
             </Field>
 
             <div className="space-y-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={testGemini}
-                disabled={testing}
-                className="rounded-full font-semibold"
-              >
-                {testing ? <LoaderCircle className="size-4 animate-spin" /> : <PlugZap className="size-4" />}
-                Test connection
-              </Button>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={loadModels}
+                  disabled={loadingModels}
+                  className="rounded-full font-semibold"
+                >
+                  {loadingModels ? (
+                    <LoaderCircle className="size-4 animate-spin" />
+                  ) : (
+                    <ListRestart className="size-4" />
+                  )}
+                  Load models for this key
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={testGemini}
+                  disabled={testing}
+                  className="rounded-full font-semibold"
+                >
+                  {testing ? <LoaderCircle className="size-4 animate-spin" /> : <PlugZap className="size-4" />}
+                  Test connection
+                </Button>
+              </div>
               <p className="text-xs text-ink-faint">
-                Sends a tiny “ping” to Google using the key and model above and shows exactly what went wrong if it fails.
+                “Load models” asks Google which chat models your key accepts (new AI Studio keys
+                usually get Gemini 3 family only). “Test connection” sends a tiny “ping” and shows
+                exactly what went wrong if it fails.
               </p>
+              {availableModels && availableModels.length > 0 ? (
+                <p className="flex items-start gap-1.5 text-xs font-semibold text-green-pop">
+                  <CheckCircle2 className="mt-0.5 size-3.5 shrink-0" />
+                  {availableModels.length} chat models found for this key — they are grouped at the
+                  top of the model list.
+                </p>
+              ) : null}
               {testResult ? (
                 <p
                   role="status"

@@ -3,7 +3,6 @@ import { Footer } from "@/components/layout/Footer";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { VisitTracker } from "@/components/layout/VisitTracker";
 import { ChatbotWidget } from "@/components/chatbot/ChatbotWidget";
-import { TempDownloadButton } from "@/components/shared/TempDownloadButton";
 import { childCareJsonLd } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 
@@ -32,8 +31,6 @@ export default function SiteLayout({
 
       <Footer />
       <ChatbotWidget />
-      {/* ⚠️ TEMPORARY (preview only) — remove after deploy */}
-      <TempDownloadButton />
       <VisitTracker />
 
       {/* NAP consistency for local SEO (screen-reader summary) */}
