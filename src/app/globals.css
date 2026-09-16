@@ -1,0 +1,349 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   NIMBERLY'S DAYCARE — DESIGN SYSTEM
+   Palette extracted from the client logo (rainbow arch + house)
+   ============================================================ */
+
+@theme inline {
+  /* shadcn bridge */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@theme {
+  /* ---- Brand palette (from logo) ---- */
+  --color-cream: #fff9f1;
+  --color-cream-deep: #fdf0e0;
+  --color-cream-soft: #fef7ee;
+
+  --color-ink: #2e3a54;
+  --color-ink-deep: #222c42;
+  --color-ink-soft: #5b6880;
+  --color-ink-faint: #8b95ab;
+
+  --color-brand: #2278e0;
+  --color-brand-deep: #1a5eb5;
+  --color-brand-soft: #e3effc;
+
+  --color-pink-pop: #f43f6d;
+  --color-pink-soft: #fde5ec;
+  --color-red-pop: #ef3b4e;
+  --color-red-soft: #fce4e4;
+  --color-orange-pop: #ff7a1f;
+  --color-orange-soft: #ffeedd;
+  --color-yellow-pop: #ffc42e;
+  --color-yellow-soft: #fff6dc;
+  --color-green-pop: #7cc043;
+  --color-green-deep: #5f9e31;
+  --color-green-soft: #ecf7e2;
+  --color-sky-pop: #2fb9f1;
+  --color-sky-soft: #e2f5fd;
+  --color-magenta-pop: #d92e9c;
+  --color-magenta-soft: #fbe4f3;
+
+  /* ---- Typography ---- */
+  --font-display: var(--font-fredoka), "Comic Sans MS", cursive, sans-serif;
+  --font-body: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+
+  /* ---- Shadows ---- */
+  --shadow-soft: 0 10px 40px -12px rgb(46 58 84 / 0.14);
+  --shadow-lift: 0 24px 60px -20px rgb(46 58 84 / 0.28);
+  --shadow-glow-pink: 0 12px 40px -10px rgb(244 63 109 / 0.45);
+  --shadow-glow-blue: 0 12px 40px -10px rgb(34 120 224 / 0.45);
+  --shadow-card: 0 4px 20px -4px rgb(46 58 84 / 0.1);
+
+  /* ---- Radii ---- */
+  --radius-4xl: 2rem;
+  --radius-5xl: 2.75rem;
+
+  /* ---- Motion ---- */
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 9s ease-in-out infinite;
+  --animate-float-x: floatX 8s ease-in-out infinite;
+  --animate-wobble: wobble 5s ease-in-out infinite;
+  --animate-blob: blob 14s ease-in-out infinite;
+  --animate-pop-in: popIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-fade-up: fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-rainbow-pan: rainbowPan 6s linear infinite;
+  --animate-shimmer: shimmer 2.6s linear infinite;
+  --animate-spin-slow: spin 14s linear infinite;
+  --animate-bounce-soft: bounceSoft 2.4s ease-in-out infinite;
+  --animate-heartbeat: heartbeat 1.8s ease-in-out infinite;
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-sway: sway 7s ease-in-out infinite;
+  --animate-twinkle: twinkle 3.2s ease-in-out infinite;
+}
+
+/* ---------------- Keyframes ---------------- */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-16px); }
+}
+@keyframes floatX {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(18px); }
+}
+@keyframes wobble {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+@keyframes blob {
+  0%, 100% { border-radius: 58% 42% 55% 45% / 55% 48% 52% 45%; transform: rotate(0deg) scale(1); }
+  33% { border-radius: 45% 55% 48% 52% / 60% 42% 58% 40%; transform: rotate(6deg) scale(1.05); }
+  66% { border-radius: 52% 48% 60% 40% / 45% 58% 42% 55%; transform: rotate(-4deg) scale(0.97); }
+}
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.6) translateY(14px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(26px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes rainbowPan {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes bounceSoft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.12); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.12); }
+  70% { transform: scale(1); }
+}
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes sway {
+  0%, 100% { transform: rotate(-2.5deg); }
+  50% { transform: rotate(2.5deg); }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.35; transform: scale(0.85) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.1) rotate(20deg); }
+}
+@keyframes dashDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ---------------- Base ---------------- */
+:root {
+  --radius: 1rem;
+  --background: #fff9f1;
+  --foreground: #2e3a54;
+  --card: #ffffff;
+  --card-foreground: #2e3a54;
+  --popover: #ffffff;
+  --popover-foreground: #2e3a54;
+  --primary: #2278e0;
+  --primary-foreground: #ffffff;
+  --secondary: #fdf0e0;
+  --secondary-foreground: #2e3a54;
+  --muted: #f4f1ec;
+  --muted-foreground: #5b6880;
+  --accent: #fde5ec;
+  --accent-foreground: #2e3a54;
+  --destructive: #ef3b4e;
+  --border: #f0e4d3;
+  --input: #eadfcc;
+  --ring: #2278e0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  @apply bg-cream text-ink font-body antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: #f43f6d;
+  color: #fff;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: #fdf0e0; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #f43f6d, #ff7a1f, #2278e0);
+  border-radius: 99px;
+  border: 2.5px solid #fdf0e0;
+}
+
+/* ---------------- Component classes ---------------- */
+@layer components {
+  .container-site {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 font-display text-[0.78rem] font-semibold uppercase tracking-[0.14em] text-brand shadow-[var(--shadow-card)];
+  }
+
+  .section-title {
+    @apply font-display font-semibold text-ink text-3xl leading-[1.15] sm:text-4xl lg:text-[2.75rem];
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full font-display font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/30 active:scale-[0.97] whitespace-nowrap;
+  }
+  .btn-lg { @apply px-7 py-3.5 text-base sm:px-9 sm:py-4 sm:text-lg; }
+  .btn-md { @apply px-5.5 py-2.5 text-sm sm:px-7 sm:py-3 sm:text-base; }
+  .btn-sm { @apply px-4 py-2 text-sm; }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full font-display font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/30 active:scale-[0.97] whitespace-nowrap bg-brand text-white shadow-[var(--shadow-glow-blue)] hover:bg-brand-deep hover:-translate-y-0.5 hover:shadow-[0_18px_46px_-12px_rgb(34_120_224/0.6)];
+  }
+  .btn-pink {
+    @apply inline-flex items-center justify-center gap-2 rounded-full font-display font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pink-pop/30 active:scale-[0.97] whitespace-nowrap bg-pink-pop text-white shadow-[var(--shadow-glow-pink)] hover:bg-[#e22c5c] hover:-translate-y-0.5 hover:shadow-[0_18px_46px_-12px_rgb(244_63_109/0.6)];
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full font-display font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/30 active:scale-[0.97] whitespace-nowrap border-2 border-ink/15 bg-white/70 text-ink backdrop-blur hover:border-brand hover:text-brand hover:-translate-y-0.5;
+  }
+  .btn-white {
+    @apply inline-flex items-center justify-center gap-2 rounded-full font-display font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/30 active:scale-[0.97] whitespace-nowrap bg-white text-ink shadow-[var(--shadow-soft)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)];
+  }
+  .btn-ghost-light {
+    @apply inline-flex items-center justify-center gap-2 rounded-full font-display font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/40 active:scale-[0.97] whitespace-nowrap border-2 border-white/40 text-white hover:bg-white/10 hover:-translate-y-0.5;
+  }
+
+  .card-soft {
+    @apply rounded-4xl bg-white shadow-[var(--shadow-card)] transition-all duration-300;
+  }
+  .card-hover {
+    @apply hover:-translate-y-1.5 hover:shadow-[var(--shadow-lift)];
+  }
+
+  .chip-info {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-white/85 px-3.5 py-1.5 text-[0.8rem] font-bold text-ink shadow-[var(--shadow-card)] backdrop-blur;
+  }
+
+  .rainbow-text {
+    background: linear-gradient(90deg, #f43f6d, #ff7a1f, #ffc42e, #7cc043, #2fb9f1, #2278e0, #d92e9c, #f43f6d);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: rainbowPan 6s linear infinite;
+  }
+
+  .rainbow-bar {
+    background: linear-gradient(90deg, #f43f6d, #ff7a1f, #ffc42e, #7cc043, #2fb9f1, #2278e0, #d92e9c);
+    background-size: 200% auto;
+    animation: rainbowPan 8s linear infinite;
+  }
+
+  .link-underline {
+    @apply relative;
+  }
+  .link-underline::after {
+    content: "";
+    @apply absolute -bottom-1 left-0 h-[3px] w-full origin-left scale-x-0 rounded-full transition-transform duration-300;
+    background: currentColor;
+  }
+  .link-underline:hover::after,
+  .link-underline[data-active="true"]::after {
+    @apply scale-x-100;
+  }
+}
+
+/* ---------------- Utilities ---------------- */
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+/* Decorative dotted underline for playful headings */
+@utility doodle-underline {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='9' viewBox='0 0 120 9'%3E%3Cpath d='M2 6 Q 12 2 22 6 T 42 6 T 62 6 T 82 6 T 102 6 T 122 6' fill='none' stroke='%23ffc42e' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  background-size: min(100%, 220px) 0.32em;
+  padding-bottom: 0.3em;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------- Boot splash (pre-hydration preloader) ----------------
+   Pure CSS so the full logo is visible instantly — even before React
+   hydrates (no blank cream screen). PageTransition lifts it away once
+   JS is live. */
+@keyframes splashPop {
+  0% { transform: scale(0.55); opacity: 0; }
+  62% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes splashRise {
+  from { transform: translateY(14px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes splashBar {
+  from { transform: scaleX(0.08); }
+  to { transform: scaleX(1); }
+}
+@keyframes splashDots {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+@keyframes splashAway {
+  to { opacity: 0; visibility: hidden; }
+}
+.splash-pop { animation: splashPop 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.splash-rise { animation: splashRise 0.55s ease 0.4s both; }
+.splash-bar {
+  transform-origin: left center;
+  transform: scaleX(0.08);
+  animation: splashBar 1.15s cubic-bezier(0.4, 0.1, 0.3, 1) 0.25s both;
+}
+.splash-dot { animation: splashDots 0.75s ease-in-out infinite; }
+/* Safety net: if JS never boots, the curtain fades itself away */
+.splash-root { animation: splashAway 0.6s ease 4.5s forwards; }
