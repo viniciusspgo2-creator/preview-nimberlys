@@ -52,14 +52,3 @@ prompt
 server.log
 # Skills directory
 /skills/
-# env & secrets
-.env
-.env*.local
-
-# local database (embedded postgres + legacy sqlite)
-/pgdata/
-/pg-dev.log
-/db/
-
-# misc sandbox artifacts
-server.log
