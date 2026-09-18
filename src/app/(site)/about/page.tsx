@@ -12,7 +12,7 @@ import { SITE } from "@/lib/site";
 
 const title = `About Our Daycare in Bay Point, CA | ${SITE.displayName}`;
 const description =
-  "Get to know Nimberly's Daycare — a warm, family-style daycare home in Bay Point, CA. Our story, philosophy, approach, and the values behind care for children 4 months to 12 years.";
+  "Get to know Nimberly's Daycare — a warm, family-style daycare home in Bay Point, CA. Our story, philosophy, approach, and the values behind care for infants and toddlers.";
 
 export const metadata: Metadata = {
   title: { absolute: title },

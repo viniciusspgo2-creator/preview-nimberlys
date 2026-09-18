@@ -489,7 +489,7 @@ export const seedPosts: SeedPost[] = [
 <p>This is the difference parents feel first. In a family child care home, your child is one of a handful, seen by the same trusted face every day. That caregiver watches your baby roll over, your toddler learn to share, and your kindergartener lose a first tooth — one continuous relationship instead of a new teacher each year. Centers offer age-based classrooms and more adults on the floor, which some children love; others get lost in the shuffle. Siblings can often stay together in a home setting, which is a quiet gift on busy mornings.</p>
 
 <h2>Schedules and Flexibility</h2>
-<p>Centers tend to run on firm schedules — classrooms transition by the clock, and moving up often means changing rooms and teachers. Home-based programs are typically more flexible about the daily rhythm, and because everyone's mixed together, your baby and your preschooler can be dropped off at one door. Hours vary program to program, so compare against your real commute. Nimberly's Daycare in Bay Point, for example, is open weekdays from 7:00 AM to 5:30 PM and welcomes children from 4 months to 12 years old — the kind of range a single-age classroom is hard-pressed to match.</p>
+<p>Centers tend to run on firm schedules — classrooms transition by the clock, and moving up often means changing rooms and teachers. Home-based programs are typically more flexible about the daily rhythm, and because everyone's mixed together, your baby and your preschooler can be dropped off at one door. Hours vary program to program, so compare against your real commute. Nimberly's Daycare in Bay Point, for example, is open weekdays from 7:00 AM to 5:30 PM and welcomes infants and toddlers in a warm, mixed-age setting — the kind of flexibility a single-age classroom is hard-pressed to match.</p>
 
 <h2>Cost and Availability</h2>
 <p>Every family's math is different, but family child care homes are often — not always — gentler on the budget, particularly for infants. Availability is its own currency: infant spots are scarce all over Contra Costa County, and smaller homes sometimes have shorter waitlists simply because you're talking directly to the owner. Whichever route you choose, ask early about fees, deposits, what's included, and whether the program accepts subsidy programs — many do. And if a program feels right but the price doesn't, say so — providers can often point you toward subsidy options you didn't know you qualified for.</p>
@@ -667,7 +667,7 @@ export const seedPosts: SeedPost[] = [
 <li>A sleep sack and any comfort item your baby uses for naps</li>
 <li>Weather gear as the seasons turn — a sun hat, warm layers</li>
 </ul>
-<p>Through this whole first year, think of your baby's caregivers as your team, not your replacement. At Nimberly's Daycare, babies join us from 4 months old in a small, calm setting where every family gets a real relationship, not a rotating cast. If you'd like to see whether our home feels right for your little one, call us at <strong>(925) 848-8272</strong> — we'd love to meet you both.</p>`,
+<p>Through this whole first year, think of your baby's caregivers as your team, not your replacement. At Nimberly's Daycare, babies and young children join us in a small, calm setting where every family gets a real relationship, not a rotating cast. If you'd like to see whether our home feels right for your little one, call us at <strong>(925) 848-8272</strong> — we'd love to meet you both.</p>`,
     faq: [
       {
         question: "When should I start looking for infant daycare?",

@@ -36,7 +36,7 @@ export default function SiteLayout({
       {/* NAP consistency for local SEO (screen-reader summary) */}
       <p className="sr-only">
         {SITE.legalName}. {SITE.addressFull}. Phone {SITE.phone}. {SITE.hours}.
-        Serving children ages {SITE.ages}.
+        Serving infants and toddlers.
       </p>
     </div>
   );

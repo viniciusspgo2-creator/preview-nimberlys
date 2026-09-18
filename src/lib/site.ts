@@ -16,7 +16,7 @@ export const SITE = {
   county: "Contra Costa County",
   hours: "Monday – Friday, 7:00 AM – 5:30 PM",
   hoursShort: "Mon–Fri · 7 AM – 5:30 PM",
-  ages: "4 months – 12 years",
+  ages: "Infants / Toddlers",
   mapsEmbed:
     "https://www.google.com/maps?q=Island%20View%20Drive%2C%20Bay%20Point%2C%20CA%2094565&output=embed",
   mapsDirections:

@@ -26,7 +26,7 @@ const FALLBACK_FAQS: FaqItem[] = [
   {
     question: "What ages of children do you accept?",
     answer:
-      "We welcome children from 4 months to 12 years old. Our small, family-style setting lets us care for infants, toddlers, preschoolers, and school-age children in a warm, mixed-age environment where everyone feels at home.",
+      "We welcome infants and toddlers. Our small, family-style setting lets us care for infants, toddlers, preschoolers, and school-age children in a warm, mixed-age environment where everyone feels at home.",
     category: "Enrollment",
   },
   {

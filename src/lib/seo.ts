@@ -5,7 +5,7 @@ export const SEO = {
   titleTemplate: `%s | ${SITE.displayName}`,
   defaultTitle: `${SITE.displayName} | Trusted Daycare & Child Care in Bay Point, CA`,
   defaultDescription:
-    "Warm, family-style daycare in Bay Point, CA for children 4 months to 12 years. Safe, nurturing care, learning through play, and California child care subsidy programs accepted.",
+    "Warm, family-style daycare in Bay Point, CA for infants and toddlers. Safe, nurturing care, learning through play, and California child care subsidy programs accepted.",
   ogImage: "/images/og-image.jpg",
 };
 
@@ -17,7 +17,7 @@ export function childCareJsonLd() {
     name: SITE.legalName,
     alternateName: SITE.displayName,
     description:
-      "Family-style daycare and child care home in Bay Point, CA serving children from 4 months to 12 years. Learning through play, a warm home environment, and California child care subsidy programs accepted.",
+      "Family-style daycare and child care home in Bay Point, CA serving infants and toddlers. Learning through play, a warm home environment, and California child care subsidy programs accepted.",
     url: siteUrl(),
     telephone: "+1-925-848-8272",
     email: SITE.email,

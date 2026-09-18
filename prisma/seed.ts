@@ -12,10 +12,10 @@ const defaultSettings: Record<string, string> = {
   address_street: "Island View Drive",
   address_city: "Bay Point, CA 94565",
   hours: "Monday – Friday, 7:00 AM – 5:30 PM",
-  ages: "4 months – 12 years",
+  ages: "Infants / Toddlers",
   meta_title: "Nimberly's Daycare | Trusted Daycare & Child Care in Bay Point, CA",
   meta_description:
-    "Warm, family-style daycare in Bay Point, CA for children 4 months to 12 years. Safe, nurturing care, learning through play, and California child care subsidy programs accepted.",
+    "Warm, family-style daycare in Bay Point, CA for infants and toddlers. Safe, nurturing care, learning through play, and California child care subsidy programs accepted.",
   og_image: "/images/og-image.jpg",
   ga_measurement_id: "",
   gsc_verification: "",
@@ -27,7 +27,7 @@ const defaultSettings: Record<string, string> = {
 
 FACTS (never contradict, never invent beyond these):
 - Name: Nimberly's Daycare, Inc.
-- Ages: 4 months to 12 years
+- Ages: we welcome infants and toddlers — do not state specific age ranges; if asked for exact ages, invite the family to call (925) 848-8272.
 - Hours: Monday–Friday, 7:00 AM – 5:30 PM (closed weekends)
 - Address: Island View Drive, Bay Point, CA 94565
 - Phone: (925) 848-8272 | Email: nimberlysdaycare0528@gmail.com
@@ -42,7 +42,7 @@ const faqs = [
   {
     question: "What ages of children do you accept?",
     answer:
-      "We welcome children from 4 months to 12 years old. Our small, family-style setting lets us care for infants, toddlers, preschoolers, and school-age children in a warm, mixed-age environment where everyone feels at home.",
+      "We welcome infants and toddlers. Our small, family-style setting lets us care for infants, toddlers, preschoolers, and school-age children in a warm, mixed-age environment where everyone feels at home.",
     category: "Enrollment",
     order: 1,
   },

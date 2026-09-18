@@ -27,10 +27,10 @@ const FALLBACK: PublicSettings = {
   address_street: "Island View Drive",
   address_city: "Bay Point, CA 94565",
   hours: "Monday – Friday, 7:00 AM – 5:30 PM",
-  ages: "4 months – 12 years",
+  ages: "Infants / Toddlers",
   meta_title: "Nimberly's Daycare | Trusted Daycare & Child Care in Bay Point, CA",
   meta_description:
-    "Warm, family-style daycare in Bay Point, CA for children 4 months to 12 years. Safe, nurturing care, learning through play, and California child care subsidy programs accepted.",
+    "Warm, family-style daycare in Bay Point, CA for infants and toddlers. Safe, nurturing care, learning through play, and California child care subsidy programs accepted.",
   og_image: "/images/og-image.jpg",
   ga_measurement_id: "",
   gsc_verification: "",

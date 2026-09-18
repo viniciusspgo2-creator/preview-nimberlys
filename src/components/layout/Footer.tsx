@@ -90,7 +90,7 @@ export function Footer() {
                   {t(k)}
                 </li>
               ))}
-              <li className="pt-1 text-xs font-bold text-white/60">{t("footer.agesLabel")}: {SITE.ages}</li>
+              <li className="pt-1 text-xs font-bold text-white/60">{SITE.ages}</li>
             </ul>
           </div>
 
