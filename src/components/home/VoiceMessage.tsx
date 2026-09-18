@@ -9,7 +9,7 @@ import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Balloon, Sparkle, Squiggle } from "@/components/shared/decor";
 
 const AUDIO_SRC = "/audio/welcome-message.mp3";
-const HERO_THUMB = "/images/gallery/photo-group-room.webp?v=4";
+const HERO_THUMB = "/images/gallery/photo-group-room.webp?v=5";
 
 /** Deterministic bar heights (px at peak) for an organic waveform look */
 const BARS = [

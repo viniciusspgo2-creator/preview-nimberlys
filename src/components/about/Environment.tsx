@@ -56,8 +56,8 @@ export function AboutEnvironment() {
             <div className="absolute -bottom-3 -right-3 h-24 w-24 rounded-4xl bg-yellow-soft" aria-hidden />
             <div className="relative aspect-[4/3] overflow-hidden rounded-4xl shadow-lift">
               <Image
-                src="/images/gallery/photo-toddler-joy.webp?v=4"
-                alt="A happy child playing on the classroom floor at Nimberly's Daycare"
+                src="/images/gallery/photo-toddler-joy.webp?v=5"
+                alt="A laughing toddler enjoying building blocks with a caregiver at Nimberly's Daycare"
                 fill
                 sizes="(max-width: 1024px) 90vw, 560px"
                 className="object-cover"

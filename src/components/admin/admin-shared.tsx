@@ -86,22 +86,50 @@ export const FAQ_CATEGORIES = [
   "Subsidy",
 ] as const;
 
+/**
+ * Gemini model ids verified against the official docs
+ * (ai.google.dev/gemini-api/docs/models), newest first.
+ * `gemini-flash-latest` is Google's stable alias that always points to the
+ * current Flash model — safest default for fresh Google AI Studio keys,
+ * which usually only expose the Gemini 3+ family.
+ *
+ * Tip: the Settings → Chatbot tab has a "Load models for this key" button
+ * that fetches the exact list from Google's ListModels API for the saved key.
+ */
 export const GEMINI_MODELS = [
+  "gemini-flash-latest",
+  "gemini-3.8-flash",
+  "gemini-3.7-flash",
+  "gemini-3.6-flash",
+  "gemini-3.5-flash",
+  "gemini-3.5-flash-lite",
+  "gemini-3.1-flash-lite",
+  "gemini-3.1-pro-preview",
+  "gemini-3-pro-preview",
+  "gemini-3-flash-preview",
   "gemini-2.5-flash",
+  "gemini-2.5-flash-lite",
   "gemini-2.5-pro",
   "gemini-2.0-flash",
+  "gemini-2.0-flash-lite",
 ] as const;
+
+export const GEMINI_CUSTOM = "__custom";
 
 const GALLERY_FILES = [
   "hero-classroom",
   "photo-baby-play",
   "photo-boy-blocks",
+  "photo-boy-learning",
   "photo-boy-truck",
+  "photo-fall-friends",
   "photo-girl-draw",
   "photo-girl-smile",
   "photo-girl-stack",
   "photo-girl-table",
+  "photo-group-circle",
   "photo-group-room",
+  "photo-group-rug",
   "photo-group-smiles",
   "photo-kids-craft",
   "photo-kids-play",

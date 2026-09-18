@@ -63,7 +63,7 @@ export function mapPostBody(
   }
   if (!partial || has("cover")) {
     data.cover =
-      String(body.cover ?? "").trim() || "/images/gallery/hero-classroom.webp?v=4";
+      String(body.cover ?? "").trim() || "/images/gallery/hero-classroom.webp?v=6";
   }
   if (!partial || has("category")) {
     data.category = String(body.category ?? "").trim() || "Choosing Child Care";

@@ -24,30 +24,16 @@ export function Welcome() {
           {/* ---- Photo composition ---- */}
           <div className="relative mx-auto w-full max-w-md lg:max-w-none">
             <Blob color="#fde5ec" className="-left-12 -top-12 h-64 w-64 opacity-80" />
-            {/* small offset photo behind — pushed well to the left so a
-                clear slice of it peeks out from behind the front photo */}
-            <div
-              aria-hidden
-              className="absolute -left-6 bottom-6 hidden w-40 -rotate-6 overflow-hidden rounded-3xl border-4 border-white shadow-card sm:block lg:-left-16 lg:w-48"
-            >
-              <div className="relative aspect-square">
-                <Image
-                  src="/images/gallery/photo-toddler-joy.webp?v=4"
-                  alt=""
-                  fill
-                  sizes="176px"
-                  className="object-cover"
-                />
-              </div>
-            </div>
 
-            <div className="relative aspect-[4/3] overflow-hidden rounded-t-[10rem] rounded-b-[2.5rem] shadow-lift ring-8 ring-cream-deep/60 sm:mx-4 lg:mx-12">
+            {/* single wide photo — replaces the previous front + back collage */}
+            <div className="relative aspect-[16/9] overflow-hidden rounded-t-[10rem] rounded-b-[2.5rem] shadow-lift ring-8 ring-cream-deep/60 sm:mx-4 lg:mx-12">
               <Image
-                src="/images/gallery/photo-group-room.webp?v=4"
-                alt="Children learning together at the ABC wall in the Nimberly's Daycare classroom"
+                src="/images/gallery/photo-group-room.webp?v=5"
+                alt="Six happy children lying together on the play mat smiling at Nimberly's Daycare"
                 fill
                 sizes="(min-width: 1024px) 42vw, 92vw"
                 className="object-cover"
+                priority
               />
             </div>
 

@@ -38,6 +38,7 @@ export const SUBSIDY_PROGRAMS = [
 export const NAV_LINKS = [
   { href: "/", key: "nav.home" },
   { href: "/about", key: "nav.about" },
+  { href: "/gallery", key: "nav.gallery" },
   { href: "/blog", key: "nav.blog" },
   { href: "/faq", key: "nav.faq" },
   { href: "/contact", key: "nav.contact" },

@@ -67,8 +67,8 @@ export function AboutStory() {
               style={{ borderRadius: "48% 48% 24px 24px / 34% 34% 24px 24px" }}
             >
               <Image
-                src="/images/gallery/photo-group-smiles.webp?v=4"
-                alt="Two children smiling by the whiteboard at Nimberly's Daycare"
+                src="/images/gallery/photo-group-smiles.webp?v=5"
+                alt="Children laughing together during story time at Nimberly's Daycare"
                 fill
                 sizes="(max-width: 1024px) 90vw, 440px"
                 className="object-cover"

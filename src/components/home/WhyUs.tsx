@@ -77,8 +77,8 @@ export function WhyUs() {
             />
             <div className="relative aspect-[4/5] overflow-hidden rounded-[3rem] shadow-lift ring-8 ring-cream">
               <Image
-                src="/images/gallery/photo-group-smiles.webp?v=4"
-                alt="Two children presenting proudly at the whiteboard at Nimberly's Daycare"
+                src="/images/gallery/photo-group-smiles.webp?v=5"
+                alt="Children laughing together during story time at Nimberly's Daycare"
                 fill
                 sizes="(min-width: 1024px) 40vw, 92vw"
                 className="object-cover"

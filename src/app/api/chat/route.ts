@@ -16,7 +16,12 @@ const RATE_LIMIT_REQUESTS = 10;
 const RATE_LIMIT_WINDOW_MS = 60_000;
 
 const GEMINI_TIMEOUT_MS = 20_000;
-const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash";
+// Google's stable alias → always points to the current Flash model.
+// Fresh Google AI Studio keys often only expose the Gemini 3+ family,
+// so a fixed "gemini-2.5-flash" default would 404 for them.
+const DEFAULT_GEMINI_MODEL = "gemini-flash-latest";
+// Retry target when the configured model 404s for the key.
+const FALLBACK_GEMINI_MODEL = "gemini-flash-latest";
 
 /** Sunny persona fallback if the Setting row is missing or the DB is down. */
 const DEFAULT_SYSTEM_PROMPT = `You are "Sunny", the friendly virtual assistant for Nimberly's Daycare, a family child care home in Bay Point, California (Contra Costa County).
@@ -150,6 +155,15 @@ type GenerateParams = {
   message: string;
 };
 
+/** Gemini error that carries the HTTP status so callers can react. */
+class GeminiHttpError extends Error {
+  status: number;
+  constructor(status: number, message: string) {
+    super(message);
+    this.status = status;
+  }
+}
+
 /** Primary provider: Google Gemini (generateContent REST API). */
 async function callGemini(
   params: GenerateParams & { apiKey: string; model: string }
@@ -178,7 +192,7 @@ async function callGemini(
   });
 
   if (!res.ok) {
-    throw new Error(`Gemini responded with HTTP ${res.status}`);
+    throw new GeminiHttpError(res.status, `Gemini responded with HTTP ${res.status}`);
   }
 
   const data = (await res.json()) as {
@@ -284,6 +298,30 @@ export async function POST(req: NextRequest) {
         provider = "gemini";
       } catch (error) {
         console.error("[/api/chat] Gemini failed, falling back to ZAI:", error);
+
+        // Saved model not available for this key (fresh AI Studio keys are
+        // Gemini-3-only)? Retry once with Google's stable alias before giving up.
+        if (
+          error instanceof GeminiHttpError &&
+          error.status === 404 &&
+          settings.geminiModel !== FALLBACK_GEMINI_MODEL
+        ) {
+          try {
+            reply = await callGemini({
+              apiKey: settings.geminiKey,
+              model: FALLBACK_GEMINI_MODEL,
+              systemPrompt: settings.systemPrompt,
+              history,
+              message,
+            });
+            provider = `gemini:${FALLBACK_GEMINI_MODEL}`;
+            console.warn(
+              `[/api/chat] model "${settings.geminiModel}" not available — retried with ${FALLBACK_GEMINI_MODEL}`
+            );
+          } catch (retryError) {
+            console.error("[/api/chat] Gemini retry with alias failed:", retryError);
+          }
+        }
       }
     }
 

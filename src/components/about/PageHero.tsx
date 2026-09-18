@@ -71,8 +71,8 @@ export function AboutPageHero() {
           >
             <div className="relative aspect-[4/3]">
               <Image
-                src="/images/gallery/photo-group-room.webp?v=4"
-                alt="Children learning together at the activity table in the classroom"
+                src="/images/gallery/photo-group-room.webp?v=5"
+                alt="Six happy children lying together on the play mat at Nimberly's Daycare"
                 fill
                 sizes="(max-width: 640px) 38vw, 260px"
                 className="object-cover"
@@ -86,8 +86,8 @@ export function AboutPageHero() {
           >
             <div className="relative aspect-[4/3]">
               <Image
-                src="/images/gallery/photo-kids-craft.webp?v=4"
-                alt="Children doing a fall craft activity at the table"
+                src="/images/gallery/photo-kids-craft.webp?v=5"
+                alt="Children playing with colorful balls on the classroom rug"
                 fill
                 priority
                 sizes="(max-width: 640px) 46vw, 300px"
@@ -103,8 +103,8 @@ export function AboutPageHero() {
           >
             <div className="relative aspect-[4/3]">
               <Image
-                src="/images/gallery/photo-girl-smile.webp?v=4"
-                alt="Two children smiling during a seasonal celebration"
+                src="/images/gallery/photo-girl-smile.webp?v=5"
+                alt="Three smiling children posing together at Nimberly's Daycare"
                 fill
                 sizes="(max-width: 640px) 38vw, 260px"
                 className="object-cover"

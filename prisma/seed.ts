@@ -20,7 +20,7 @@ const defaultSettings: Record<string, string> = {
   ga_measurement_id: "",
   gsc_verification: "",
   gemini_api_key: "",
-  gemini_model: "gemini-2.5-flash",
+  gemini_model: "gemini-flash-latest",
   chat_welcome:
     "Hi there! I'm Sunny, the Nimberly's Daycare assistant. Ask me anything about our daycare — ages, hours, programs, or how to schedule a visit!",
   chat_system_prompt: `You are "Sunny", the friendly virtual assistant for Nimberly's Daycare, a family child care home in Bay Point, California (Contra Costa County).
@@ -117,43 +117,40 @@ async function main() {
     await db.setting.upsert({ where: { key }, update: {}, create: { key, value } });
   }
 
+  // Refresh a shipped default that became unavailable: fresh Google AI Studio
+  // keys often don't expose gemini-2.5-flash anymore (Gemini 3+ only).
+  // Only the exact old default is updated — custom admin choices stay untouched.
+  await db.setting.updateMany({
+    where: { key: "gemini_model", value: "gemini-2.5-flash" },
+    data: { value: "gemini-flash-latest" },
+  });
+
   // FAQs
   const faqCount = await db.faq.count();
   if (faqCount === 0) {
     for (const f of faqs) await db.faq.create({ data: f });
   }
 
-  // Blog posts
+  // Blog posts — create-if-missing ONLY (never overwrite admin edits on redeploys)
   for (const p of seedPosts) {
+    const data = {
+      slug: p.slug,
+      title: p.title,
+      excerpt: p.excerpt,
+      content: p.content,
+      metaTitle: p.metaTitle,
+      metaDescription: p.metaDescription,
+      cover: p.cover,
+      category: p.category,
+      tags: p.tags.join(", "),
+      readingMinutes: p.readingMinutes,
+      faq: JSON.stringify(p.faq),
+      featured: p.featured,
+    };
     await db.post.upsert({
       where: { slug: p.slug },
-      update: {
-        title: p.title,
-        excerpt: p.excerpt,
-        content: p.content,
-        metaTitle: p.metaTitle,
-        metaDescription: p.metaDescription,
-        cover: p.cover,
-        category: p.category,
-        tags: p.tags.join(", "),
-        readingMinutes: p.readingMinutes,
-        faq: JSON.stringify(p.faq),
-        featured: p.featured,
-      },
-      create: {
-        slug: p.slug,
-        title: p.title,
-        excerpt: p.excerpt,
-        content: p.content,
-        metaTitle: p.metaTitle,
-        metaDescription: p.metaDescription,
-        cover: p.cover,
-        category: p.category,
-        tags: p.tags.join(", "),
-        readingMinutes: p.readingMinutes,
-        faq: JSON.stringify(p.faq),
-        featured: p.featured,
-      },
+      update: {},
+      create: data,
     });
   }
 

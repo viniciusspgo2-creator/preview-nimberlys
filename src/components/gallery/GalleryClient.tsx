@@ -1,11 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { ChevronLeft, ChevronRight, Images, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
-import { Reveal, RevealGroup, RevealItem } from "@/components/shared/Reveal";
+import { RevealGroup, RevealItem } from "@/components/shared/Reveal";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import {
   Dialog,
@@ -18,68 +17,115 @@ type GalleryPhoto = {
   src: string;
   alt: string;
   caption: string;
-  /** Mobile-first grid spans; explicit lg placement forms the mosaic */
-  cls: string;
+  /** Tall cells span 2 rows on desktop for a lively mosaic */
+  tall?: boolean;
+  /** Wide cells span 2 columns on desktop */
+  wide?: boolean;
 };
 
+/** Every photo of the new collection — all in one place. */
 const PHOTOS: GalleryPhoto[] = [
   {
-    src: "/images/gallery/photo-kids-craft.webp?v=5",
-    alt: "Children and teachers playing together with colorful balls on the classroom rug",
-    caption: "Little hands, big creations",
-    cls: "col-span-2 row-span-2 lg:col-start-1 lg:row-start-1",
+    src: "/images/gallery/hero-classroom.webp?v=6",
+    alt: "Five happy children smiling together on the classroom rug",
+    caption: "All smiles",
+    tall: true,
+  },
+  {
+    src: "/images/gallery/photo-group-room.webp?v=5",
+    alt: "Six happy children lying together on the play mat smiling at the camera",
+    caption: "The whole gang",
+    wide: true,
+  },
+  {
+    src: "/images/gallery/photo-group-rug.webp?v=6",
+    alt: "Eight laughing children sitting in a row on the colorful alphabet rug",
+    caption: "Alphabet rug crew",
+    wide: true,
   },
   {
     src: "/images/gallery/photo-girl-smile.webp?v=5",
     alt: "Three smiling children posing together against a yellow wall",
-    caption: "Happy faces, every day",
-    cls: "lg:col-start-3 lg:row-start-1",
+    caption: "Best friends",
   },
   {
     src: "/images/gallery/photo-baby-play.webp?v=5",
     alt: "A curious baby reaching out while playing with colorful blocks",
-    caption: "Big fun for our littlest ones",
-    cls: "lg:col-start-4 lg:row-start-1",
+    caption: "Discovery day",
   },
   {
     src: "/images/gallery/photo-boy-blocks.webp?v=5",
     alt: "A toddler concentrating hard while stacking colorful toy blocks",
-    caption: "Building towers and confidence",
-    cls: "lg:col-start-3 lg:row-start-2 lg:row-span-2",
+    caption: "Little architect",
+    tall: true,
   },
   {
     src: "/images/gallery/photo-girl-draw.webp?v=5",
     alt: "Two children exploring a picture book and building with blocks together",
-    caption: "Learning through hands-on play",
-    cls: "col-span-2 lg:col-span-1 lg:col-start-4 lg:row-start-2",
+    caption: "Story time friends",
   },
   {
     src: "/images/gallery/photo-girl-stack.webp?v=5",
     alt: "A smiling child playing with building blocks in the classroom",
-    caption: "Playful days, happy hearts",
-    cls: "lg:col-start-1 lg:row-start-3 lg:row-span-2",
+    caption: "Proud builder",
   },
   {
     src: "/images/gallery/photo-boy-truck.webp?v=5",
     alt: "A toddler playing with a wooden toy train with a teacher nearby",
-    caption: "Imaginations at work",
-    cls: "lg:col-start-2 lg:row-start-3 lg:col-span-2",
+    caption: "All aboard!",
+    wide: true,
   },
   {
     src: "/images/gallery/photo-girl-table.webp?v=5",
     alt: "A caregiver and two girls building with blocks at the activity table",
-    caption: "Quiet moments, busy minds",
-    cls: "lg:col-start-4 lg:row-start-3 lg:row-span-2",
+    caption: "Teamwork",
+  },
+  {
+    src: "/images/gallery/photo-group-smiles.webp?v=5",
+    alt: "Children laughing together during story time",
+    caption: "Story time giggles",
+    wide: true,
+  },
+  {
+    src: "/images/gallery/photo-kids-craft.webp?v=5",
+    alt: "Children and teachers playing with colorful balls on the classroom rug",
+    caption: "Play-time together",
+    wide: true,
+  },
+  {
+    src: "/images/gallery/photo-kids-play.webp?v=6",
+    alt: "Six smiling children sitting together under the Happy Daycare banner",
+    caption: "Our happy place",
   },
   {
     src: "/images/gallery/photo-toddler-fun.webp?v=5",
     alt: "Children celebrating together with balloons at a classroom party",
-    caption: "Learning is more fun together",
-    cls: "col-span-2 lg:col-start-2 lg:row-start-4 lg:col-span-2",
+    caption: "Party day",
+    tall: true,
+  },
+  {
+    src: "/images/gallery/photo-toddler-joy.webp?v=5",
+    alt: "A laughing toddler enjoying building blocks with a caregiver",
+    caption: "Pure joy",
+  },
+  {
+    src: "/images/gallery/photo-boy-learning.webp?v=5",
+    alt: "A toddler counting with a wooden abacus toy",
+    caption: "Little scholar",
+  },
+  {
+    src: "/images/gallery/photo-fall-friends.webp?v=5",
+    alt: "Children listening attentively in a circle on the classroom floor",
+    caption: "Circle of friends",
+  },
+  {
+    src: "/images/gallery/photo-group-circle.webp?v=5",
+    alt: "Children lying in a circle with their heads together on the floor",
+    caption: "Heads together",
   },
 ];
 
-export function Gallery() {
+export function GalleryClient() {
   const { t } = useI18n();
   const [open, setOpen] = useState<number | null>(null);
 
@@ -89,6 +135,7 @@ export function Gallery() {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") setOpen((i) => (i === null ? null : (i + PHOTOS.length - 1) % PHOTOS.length));
       if (e.key === "ArrowRight") setOpen((i) => (i === null ? null : (i + 1) % PHOTOS.length));
+      if (e.key === "Escape") setOpen(null);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -98,24 +145,27 @@ export function Gallery() {
     setOpen((i) => (i === null ? null : (i + dir + PHOTOS.length) % PHOTOS.length));
 
   return (
-    <section aria-label={t("gallery.title")} className="bg-white py-20 sm:py-28">
+    <section aria-label={t("galleryPage.title")} className="bg-cream pt-28 pb-20 sm:pt-32 sm:pb-28">
       <div className="container-site">
         <SectionHeading
-          eyebrowKey="gallery.eyebrow"
-          title={t("gallery.title")}
-          subtitle={t("gallery.subtitle")}
+          eyebrowKey="galleryPage.eyebrow"
+          title={t("galleryPage.title")}
+          subtitle={t("galleryPage.subtitle")}
         />
 
         <RevealGroup
-          className="mt-12 grid auto-rows-[150px] grid-flow-dense grid-cols-2 gap-3 sm:auto-rows-[180px] sm:gap-4 lg:auto-rows-[200px]"
-          stagger={0.06}
+          className="mt-12 grid auto-rows-[150px] grid-flow-dense grid-cols-2 gap-3 sm:auto-rows-[180px] sm:gap-4 lg:auto-rows-[210px]"
+          stagger={0.05}
         >
           {PHOTOS.map((photo, i) => (
-            <RevealItem key={photo.src} className={photo.cls}>
+            <RevealItem
+              key={photo.src}
+              className={photo.tall ? "lg:row-span-2" : photo.wide ? "col-span-2" : undefined}
+            >
               <button
                 type="button"
                 onClick={() => setOpen(i)}
-                aria-label={`${photo.caption} — ${t("gallery.title")}`}
+                aria-label={`${photo.caption} — ${t("galleryPage.title")}`}
                 className="group relative block h-full w-full overflow-hidden rounded-3xl shadow-card focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pink-pop/40"
               >
                 <Image
@@ -135,14 +185,6 @@ export function Gallery() {
             </RevealItem>
           ))}
         </RevealGroup>
-
-        {/* View-all CTA → full gallery page */}
-        <Reveal className="mt-10 flex justify-center">
-          <Link href="/gallery" className="btn-outline btn-lg">
-            <Images className="h-5 w-5" aria-hidden />
-            {t("galleryPage.cta")}
-          </Link>
-        </Reveal>
       </div>
 
       {/* ---- Lightbox ---- */}
@@ -151,8 +193,8 @@ export function Gallery() {
           showCloseButton={false}
           className="max-w-4xl gap-0 overflow-visible border-0 bg-transparent p-0 shadow-none"
         >
-          <DialogTitle className="sr-only">{t("gallery.title")}</DialogTitle>
-          <DialogDescription className="sr-only">{t("gallery.subtitle")}</DialogDescription>
+          <DialogTitle className="sr-only">{t("galleryPage.title")}</DialogTitle>
+          <DialogDescription className="sr-only">{t("galleryPage.subtitle")}</DialogDescription>
 
           {open !== null && (
             <div className="relative h-[70vh] w-full overflow-hidden rounded-3xl shadow-lift sm:h-[78vh]">

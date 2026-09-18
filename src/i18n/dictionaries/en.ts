@@ -15,6 +15,7 @@ export const en = {
   // ---------- Nav ----------
   "nav.home": "Home",
   "nav.about": "About Us",
+  "nav.gallery": "Gallery",
   "nav.programs": "Programs",
   "nav.blog": "Blog",
   "nav.contact": "Contact",
@@ -171,6 +172,10 @@ export const en = {
   "gallery.eyebrow": "Our Gallery",
   "gallery.title": "Life at Nimberly's",
   "gallery.subtitle": "Little moments, big smiles — a peek into our days together.",
+  "galleryPage.eyebrow": "Our Gallery",
+  "galleryPage.title": "Life at Nimberly's",
+  "galleryPage.subtitle": "Little moments, big smiles — all our favorite photos in one place.",
+  "galleryPage.cta": "View the Full Gallery",
 
   // ---------- FAQ ----------
   "faq.eyebrow": "Questions & Answers",

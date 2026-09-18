@@ -107,8 +107,8 @@ export function PlayActivities() {
               />
               <div className="relative aspect-[5/4] overflow-hidden rounded-[3rem] shadow-lift ring-8 ring-white">
                 <Image
-                  src="/images/gallery/photo-kids-play.webp?v=4"
-                  alt="Children laughing and playing on the playground slide at Nimberly's Daycare"
+                  src="/images/gallery/photo-kids-play.webp?v=6"
+                  alt="Six smiling children sitting together under the Happy Daycare banner at Nimberly's Daycare"
                   fill
                   sizes="(min-width: 1024px) 28rem, 92vw"
                   className="object-cover"

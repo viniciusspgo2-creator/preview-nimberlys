@@ -150,8 +150,8 @@ export function Hero() {
             />
             <div className="relative aspect-[4/5] overflow-hidden rounded-t-full rounded-b-[3rem] shadow-lift ring-8 ring-white">
               <Image
-                src="/images/gallery/hero-classroom.webp?v=4"
-                alt="Smiling children doing a craft activity together at Nimberly's Daycare in Bay Point"
+                src="/images/gallery/hero-classroom.webp?v=6"
+                alt="Five happy children smiling together on the classroom rug at Nimberly's Daycare in Bay Point"
                 fill
                 priority
                 sizes="(min-width: 1024px) 560px, 92vw"

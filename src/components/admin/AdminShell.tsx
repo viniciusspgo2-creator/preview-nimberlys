@@ -12,6 +12,7 @@ import {
   Menu,
   LogOut,
   ExternalLink,
+  Download,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -97,6 +98,26 @@ function NavList({
   );
 }
 
+/**
+ * Downloads the deploy ZIP (admin-only route). Lives here — inside the
+ * password-protected panel — so it is never visible on the public site.
+ */
+function DownloadProjectButton() {
+  return (
+    <a
+      href="/api/admin/download-project"
+      download="nimberlys-daycare-vercel.zip"
+      className="flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-bold text-ink-soft transition-colors hover:bg-cream-deep hover:text-ink"
+    >
+      <Download className="size-[1.15rem]" />
+      <span className="flex-1">Download project</span>
+      <span className="rounded-full bg-cream-deep px-2 py-0.5 text-[0.65rem] font-extrabold tracking-wide text-ink-faint">
+        .ZIP
+      </span>
+    </a>
+  );
+}
+
 function LogoutButton({ onDone }: { onDone?: () => void }) {
   const [busy, setBusy] = React.useState(false);
   return (
@@ -147,7 +168,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     NAV_ITEMS.find((i) => isActive(pathname, i.href))?.label ?? "Admin";
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-cream lg:pl-64">
       <AdminStyleTag />
 
       {/* Desktop sidebar */}
@@ -160,6 +181,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           <NavList pathname={pathname} unhandled={unhandled} />
         </div>
         <div className="space-y-1 border-t border-[#f0e4d3] p-3">
+          <DownloadProjectButton />
           <Link
             href="/"
             target="_blank"
@@ -199,6 +221,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 />
               </div>
               <div className="space-y-1 border-t border-[#f0e4d3] p-3">
+                <DownloadProjectButton />
                 <Link
                   href="/"
                   target="_blank"
@@ -229,7 +252,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       </header>
 
       {/* Content */}
-      <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:ml-64 lg:px-10 lg:py-8">
+      <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
         {children}
       </main>
     </div>

@@ -15,6 +15,7 @@ export const de = {
   // ---------- Nav ----------
   "nav.home": "Start",
   "nav.about": "Über uns",
+  "nav.gallery": "Galerie",
   "nav.programs": "Programme",
   "nav.blog": "Blog",
   "nav.contact": "Kontakt",
@@ -166,6 +167,10 @@ export const de = {
   "gallery.eyebrow": "Unsere Galerie",
   "gallery.title": "Das Leben bei Nimberly's",
   "gallery.subtitle": "Kleine Momente, große Lächeln — ein Blick in unsere gemeinsamen Tage.",
+  "galleryPage.eyebrow": "Unsere Galerie",
+  "galleryPage.title": "Das Leben bei Nimberly's",
+  "galleryPage.subtitle": "Kleine Momente, große Lächeln — alle unsere Lieblingsfotos an einem Ort.",
+  "galleryPage.cta": "Zur kompletten Galerie",
 
   // ---------- FAQ ----------
   "faq.eyebrow": "Fragen & Antworten",
