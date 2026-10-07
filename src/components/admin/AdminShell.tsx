@@ -13,6 +13,7 @@ import {
   LogOut,
   ExternalLink,
   Download,
+  Images,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -21,6 +22,7 @@ import { AdminStyleTag } from "./admin-shared";
 
 const NAV_ITEMS = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/photos", label: "Photos & gallery", icon: Images },
   { href: "/admin/posts", label: "Blog Posts", icon: FileText },
   { href: "/admin/faqs", label: "FAQs", icon: HelpCircle },
   { href: "/admin/messages", label: "Messages", icon: Mail },

@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Fredoka, Nunito } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
+import {getPublicPhotos} from "@/lib/photos";
+import {PhotoProvider} from "@/components/shared/SiteImage";
 import { Toaster } from "@/components/ui/sonner";
 import { I18nProvider } from "@/lib/i18n";
 import { getPublicSettings } from "@/lib/settings-server";
@@ -95,17 +97,17 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const s = await getPublicSettings();
+  const [s, photos] = await Promise.all([getPublicSettings(),getPublicPhotos()]);
 
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${fredoka.variable} ${nunito.variable} antialiased`}
       >
-        <I18nProvider>
+        <I18nProvider><PhotoProvider photos={photos}>
           {children}
           <Toaster position="top-center" richColors closeButton />
-        </I18nProvider>
+        </PhotoProvider></I18nProvider>
 
         {/* Google Analytics (managed from Admin → Settings) */}
         {s.ga_measurement_id ? (

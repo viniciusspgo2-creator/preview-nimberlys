@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/shared/SiteImage";
 import { useI18n } from "@/lib/i18n";
 import { Reveal } from "@/components/shared/Reveal";
 import { Blob, Cloud, Sparkle, Sun } from "@/components/shared/decor";

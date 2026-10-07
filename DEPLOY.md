@@ -41,8 +41,9 @@ Escolha **uma** opção (recomendado: **Neon**, integração nativa com a Vercel
 No terminal, na raiz do projeto:
 
 ```bash
-# 1. aplica o schema
-DATABASE_URL="cole_a_connection_string_aqui" npx prisma db push
+# 1. configure DATABASE_URL no ambiente e aplique as migrações
+node prisma/baseline.mjs
+npx prisma migrate deploy
 
 # 2. semeia posts de blog, FAQs e configurações
 DATABASE_URL="cole_a_connection_string_aqui" npm run db:seed
@@ -123,3 +124,7 @@ O arquivo `db/custom.db` é mantido apenas como arquivo morto — pode ser arqui
 Alterar `ADMIN_SECRET` não altera a senha. Siga [RECUPERAR-ADMIN.md](RECUPERAR-ADMIN.md) para usar o novo fluxo de recuperação com `ADMIN_RESET_TOKEN`.
 
 Esta entrega usa npm e package-lock.json. Remova o bun.lock antigo ao atualizar o repositório.
+
+## Fotos e galeria
+
+Consulte `FOTOS-E-GALERIA.md`. A nova área do painel depende da migração SitePhoto, aplicada por `npm run build`. Mantenha o banco existente para preservar senha, conteúdo e uploads.

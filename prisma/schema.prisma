@@ -67,3 +67,15 @@ model ChatLog {
   provider  String?
   createdAt DateTime @default(now())
 }
+
+model SitePhoto {
+  id String @id
+  original String? @unique
+  caption String
+  alt String
+  gallery Boolean @default(true)
+  position Float @default(0)
+  data Bytes?
+  version String
+  updatedAt DateTime @updatedAt
+}

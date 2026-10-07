@@ -8,9 +8,8 @@
  * This script runs BEFORE migrate deploy in the build and:
  *   1. does nothing when there is a migration history (normal path), or when
  *      the app tables don't exist yet (fresh DB — migrate deploy creates them);
- *   2. when the app tables exist WITHOUT history, it marks every local
- *      migration in prisma/migrations as already applied (baseline), so
- *      `migrate deploy` becomes a no-op instead of crashing the build.
+ *   2. when the app tables exist WITHOUT history, it marks only the original schema migration as applied (baseline).
+ *      New migrations remain pending and are applied by migrate deploy.
  *
  * It never throws: any unexpected error only prints a warning so the real
  * diagnosis happens in `prisma migrate deploy`.
@@ -37,6 +36,7 @@ async function main() {
     ? readdirSync(migrationsDir, { withFileTypes: true })
         .filter((d) => d.isDirectory() && existsSync(join(migrationsDir, d.name, "migration.sql")))
         .map((d) => d.name)
+        .filter((name) => name === "20260915220000_init")
         .sort()
     : [];
 
@@ -69,7 +69,7 @@ async function main() {
       return;
     }
 
-    // Tables exist without history → baseline every local migration as applied.
+    // Tables exist without history → baseline the original schema migration as applied.
     await prisma.$executeRawUnsafe(`
       CREATE TABLE IF NOT EXISTS "_prisma_migrations" (
         "id" TEXT NOT NULL,

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/shared/SiteImage";
 import { Clock, Heart, Mail, MapPin, Moon, Phone, Sparkles } from "lucide-react";
 import { NAV_LINKS, SITE } from "@/lib/site";
 import { useI18n } from "@/lib/i18n";

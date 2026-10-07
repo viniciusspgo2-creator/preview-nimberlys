@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Image from "@/components/shared/SiteImage";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { Phone } from "lucide-react";

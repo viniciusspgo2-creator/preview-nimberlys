@@ -26,6 +26,7 @@ const INCLUDE = [
   "DEPLOY.md",
   "package-lock.json",
   "RECUPERAR-ADMIN.md",
+  "FOTOS-E-GALERIA.md",
   "tests",
   "components.json",
   "eslint.config.mjs",

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
+import Image from "@/components/shared/SiteImage";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Loader2, MessagesSquare, Phone, SendHorizontal, Sun, X, ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";

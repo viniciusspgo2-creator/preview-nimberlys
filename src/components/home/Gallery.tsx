@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image, {usePhotos} from "@/components/shared/SiteImage";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Images, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -14,73 +14,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-type GalleryPhoto = {
-  src: string;
-  alt: string;
-  caption: string;
-  /** Mobile-first grid spans; explicit lg placement forms the mosaic */
-  cls: string;
-};
-
-const PHOTOS: GalleryPhoto[] = [
-  {
-    src: "/images/gallery/photo-kids-craft.webp?v=5",
-    alt: "Children and teachers playing together with colorful balls on the classroom rug",
-    caption: "Little hands, big creations",
-    cls: "col-span-2 row-span-2 lg:col-start-1 lg:row-start-1",
-  },
-  {
-    src: "/images/gallery/photo-girl-smile.webp?v=5",
-    alt: "Three smiling children posing together against a yellow wall",
-    caption: "Happy faces, every day",
-    cls: "lg:col-start-3 lg:row-start-1",
-  },
-  {
-    src: "/images/gallery/photo-baby-play.webp?v=5",
-    alt: "A curious baby reaching out while playing with colorful blocks",
-    caption: "Big fun for our littlest ones",
-    cls: "lg:col-start-4 lg:row-start-1",
-  },
-  {
-    src: "/images/gallery/photo-boy-blocks.webp?v=5",
-    alt: "A toddler concentrating hard while stacking colorful toy blocks",
-    caption: "Building towers and confidence",
-    cls: "lg:col-start-3 lg:row-start-2 lg:row-span-2",
-  },
-  {
-    src: "/images/gallery/photo-girl-draw.webp?v=5",
-    alt: "Two children exploring a picture book and building with blocks together",
-    caption: "Learning through hands-on play",
-    cls: "col-span-2 lg:col-span-1 lg:col-start-4 lg:row-start-2",
-  },
-  {
-    src: "/images/gallery/photo-girl-stack.webp?v=5",
-    alt: "A smiling child playing with building blocks in the classroom",
-    caption: "Playful days, happy hearts",
-    cls: "lg:col-start-1 lg:row-start-3 lg:row-span-2",
-  },
-  {
-    src: "/images/gallery/photo-boy-truck.webp?v=5",
-    alt: "A toddler playing with a wooden toy train with a teacher nearby",
-    caption: "Imaginations at work",
-    cls: "lg:col-start-2 lg:row-start-3 lg:col-span-2",
-  },
-  {
-    src: "/images/gallery/photo-girl-table.webp?v=5",
-    alt: "A caregiver and two girls building with blocks at the activity table",
-    caption: "Quiet moments, busy minds",
-    cls: "lg:col-start-4 lg:row-start-3 lg:row-span-2",
-  },
-  {
-    src: "/images/gallery/photo-toddler-fun.webp?v=5",
-    alt: "Children celebrating together with balloons at a classroom party",
-    caption: "Learning is more fun together",
-    cls: "col-span-2 lg:col-start-2 lg:row-start-4 lg:col-span-2",
-  },
-];
-
 export function Gallery() {
   const { t } = useI18n();
+  const PHOTOS = usePhotos().filter(p=>p.gallery).slice(0,9);
   const [open, setOpen] = useState<number | null>(null);
 
   // Keyboard navigation for the lightbox
@@ -92,7 +28,7 @@ export function Gallery() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
+  }, [open, PHOTOS.length]);
 
   const step = (dir: 1 | -1) =>
     setOpen((i) => (i === null ? null : (i + dir + PHOTOS.length) % PHOTOS.length));
@@ -107,11 +43,11 @@ export function Gallery() {
         />
 
         <RevealGroup
-          className="mt-12 grid auto-rows-[150px] grid-flow-dense grid-cols-2 gap-3 sm:auto-rows-[180px] sm:gap-4 lg:auto-rows-[200px]"
+          className="mt-12 grid auto-rows-[150px] grid-flow-dense grid-cols-2 lg:grid-cols-3 gap-3 sm:auto-rows-[180px] sm:gap-4 lg:auto-rows-[200px]"
           stagger={0.06}
         >
           {PHOTOS.map((photo, i) => (
-            <RevealItem key={photo.src} className={photo.cls}>
+            <RevealItem key={photo.src} className="min-w-0">
               <button
                 type="button"
                 onClick={() => setOpen(i)}
@@ -154,7 +90,7 @@ export function Gallery() {
           <DialogTitle className="sr-only">{t("gallery.title")}</DialogTitle>
           <DialogDescription className="sr-only">{t("gallery.subtitle")}</DialogDescription>
 
-          {open !== null && (
+          {open !== null && PHOTOS[open] && (
             <div className="relative h-[70vh] w-full overflow-hidden rounded-3xl shadow-lift sm:h-[78vh]">
               <Image
                 key={PHOTOS[open].src}
@@ -162,7 +98,7 @@ export function Gallery() {
                 alt={PHOTOS[open].alt}
                 fill
                 sizes="(min-width: 896px) 896px, 92vw"
-                className="object-cover"
+                className="object-contain"
                 priority
               />
 

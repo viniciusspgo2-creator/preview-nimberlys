@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
-    "build": "prisma generate && node prisma/baseline.mjs && prisma migrate deploy && npx tsx prisma/seed.ts && next build",
+    "build": "prisma generate && node prisma/baseline.mjs && prisma migrate deploy && npx tsx prisma/seed.ts && npm run zip && next build",
     "postinstall": "prisma generate",
     "start": "next start",
     "lint": "eslint .",
@@ -16,7 +16,8 @@
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
     "typecheck": "tsc --noEmit",
-    "test:admin": "node --test tests/admin.test.cjs"
+    "test:admin": "node --test tests/admin.test.cjs",
+    "test:photos-ui": "node --test tests/photos-ui.test.cjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -95,6 +96,7 @@
     "embedded-postgres": "^18.4.0-beta.17",
     "eslint": "^9",
     "eslint-config-next": "^16.1.1",
+    "jsdom": "^30.1.2",
     "tailwindcss": "^4",
     "tsx": "^4.23.13",
     "tw-animate-css": "^1.3.5",

@@ -16,7 +16,7 @@ function table(name) {
   const rows = () => { check(); return state[name]; };
   return {
     async findUnique({where}) { return rows().find(r=>matches(r,where)) ?? null; },
-    async findMany({where, take}={}) { const found=rows().filter(r=>matches(r,where)); return take ? found.slice(0,take) : found; },
+    async findMany({where, take, select}={}) { let found=rows().filter(r=>matches(r,where)); if(take)found=found.slice(0,take);return select?found.map(r=>Object.fromEntries(Object.keys(select).map(k=>[k,r[k]]))):found; },
     async count({where}={}) { return rows().filter(r=>matches(r,where)).length; },
     async groupBy() { return []; },
     async create({data}) {
@@ -30,7 +30,7 @@ function table(name) {
     async delete({where}) { const row=await this.findUnique({where});state[name]=rows().filter(r=>r!==row);return row; },
   };
 }
-const db = Object.fromEntries(['setting','post','faq','contactMessage','chatLog','pageView'].map(x=>[x,table(x)]));
+const db = Object.fromEntries(['setting','post','faq','contactMessage','chatLog','pageView','sitePhoto'].map(x=>[x,table(x)]));
 db.$transaction = fn => {
   const next=queue.then(async()=>{const snapshot=structuredClone(state);try{return await fn(db);}catch(e){state=snapshot;throw e;}});
   queue=next.catch(()=>{});return next;
@@ -45,7 +45,7 @@ require.extensions['.ts']=(mod,file)=>mod._compile(ts.transpileModule(fs.readFil
 const auth=require('../src/lib/admin-auth.ts');
 const route=name=>require(path.join(root,'src/app/api/admin',name,'route.ts'));
 const originalEnv={ADMIN_SECRET:process.env.ADMIN_SECRET,ADMIN_RESET_TOKEN:process.env.ADMIN_RESET_TOKEN};
-beforeEach(()=>{state={setting:[],post:[],faq:[],contactMessage:[],chatLog:[],pageView:[]};failDatabase=false;failWrite=false;process.env.ADMIN_SECRET='isolated-test-session-secret';process.env.ADMIN_RESET_TOKEN='isolated-test-recovery-token-at-least-32-chars';});
+beforeEach(()=>{state={setting:[],post:[],faq:[],contactMessage:[],chatLog:[],pageView:[],sitePhoto:[]};failDatabase=false;failWrite=false;process.env.ADMIN_SECRET='isolated-test-session-secret';process.env.ADMIN_RESET_TOKEN='isolated-test-recovery-token-at-least-32-chars';});
 after(()=>{for(const [k,v]of Object.entries(originalEnv)){if(v===undefined)delete process.env[k];else process.env[k]=v;}});
 function request(name,method='GET',body,cookie,origin){return new Request('http://localhost/api/admin/'+name,{method,headers:{...(body?{'Content-Type':'application/json'}:{}),...(cookie?{cookie:'nimb_admin='+cookie}:{}),...(origin?{origin}:{})},...(body?{body:JSON.stringify(body)}:{})});}
 async function signedIn(){await auth.setupAdminPassword('Original-password-123');return (await auth.createToken()).token;}
@@ -138,4 +138,54 @@ test('messages can be marked handled and deleted',async()=>{
 test('admin project download returns a ZIP when the archive has been built',async(t)=>{
   if(!fs.existsSync(path.join(root,'assets/nimberlys-daycare-vercel.zip')))return t.skip('Run npm run zip to verify the optional archive.');
   const token=await signedIn();const response=await route('download-project').GET(request('download-project','GET',null,token));assert.equal(response.status,200);assert.equal(response.headers.get('content-type'),'application/zip');const bytes=Buffer.from(await response.arrayBuffer());assert.equal(bytes.subarray(0,2).toString(),'PK');
+});
+
+function photoUpload(file, token, id='', origin='http://localhost') {
+ const body=new FormData();body.append('file',file);body.append('caption','New classroom moment');if(id)body.append('id',id);
+ return new Request('http://localhost/api/admin/photos',{method:'POST',headers:{cookie:`nimb_admin=${encodeURIComponent(token)}`,origin},body});
+}
+test('photo uploads require authentication and same-origin requests',async()=>{
+ assert.equal((await route('photos').GET(request('photos'))).status,401);
+ const token=await signedIn();
+ assert.equal((await route('photos').POST(photoUpload(new File(['x'],'x.png'),token,'','https://other.example'))).status,403);
+ assert.equal(state.sitePhoto.length,0);
+});
+test('new gallery photos are converted to WebP, persisted, and served without exposing bytes in metadata',async()=>{
+ const token=await signedIn(); const sharp=require('sharp');
+ const png=await sharp({create:{width:2200,height:1100,channels:3,background:'#ff5500'}}).png().toBuffer();
+ assert.equal((await route('photos').POST(photoUpload(new File([png],'test.png',{type:'image/png'}),token))).status,200);
+ assert.equal(state.sitePhoto.length,1);const saved=state.sitePhoto[0];
+ assert.equal(saved.gallery,true);const meta=await sharp(saved.data).metadata();assert.equal(meta.format,'webp');assert.equal(meta.width,1800);assert.equal(meta.height,900);
+ const result=await (await route('photos').GET(request('photos','GET',null,token))).json();const added=result.photos.find(p=>p.id===saved.id);
+ assert.equal(result.photos[0].id,saved.id);assert.equal(added.data,undefined);assert.match(added.src,/^\/api\/photos\//);
+ const publicRoute=require('../src/app/api/photos/[id]/route.ts');const image=await publicRoute.GET(new Request('http://localhost'+added.src),{params:Promise.resolve({id:saved.id})});
+ assert.equal(image.status,200);assert.equal(image.headers.get('content-type'),'image/webp');assert.deepEqual(Buffer.from(await image.arrayBuffer()),Buffer.from(saved.data));
+});
+test('replacement preserves gallery membership and uses a new version; removal and restoration preserve site photo',async()=>{
+ const token=await signedIn();const original=require('../src/data/photo-defaults.json').find(p=>p.gallery);
+ const sharp=require('sharp');const png=await sharp({create:{width:20,height:20,channels:3,background:'#123456'}}).png().toBuffer();
+ const upload=()=>route('photos').POST(photoUpload(new File([png],'test.png',{type:'image/png'}),token,original.id));
+ assert.equal((await upload()).status,200);const version=state.sitePhoto[0].version;
+ assert.equal((await route('photos').PATCH(request('photos','PATCH',{id:original.id,gallery:false},token))).status,200);
+ assert.equal((await upload()).status,200);assert.equal(state.sitePhoto.length,1);assert.equal(state.sitePhoto[0].gallery,false);assert.notEqual(state.sitePhoto[0].version,version);assert.equal(state.sitePhoto[0].original,original.src);
+ await route('photos').PATCH(request('photos','PATCH',{id:original.id,gallery:true,caption:'Restored photo'},token));assert.equal(state.sitePhoto[0].gallery,true);assert.equal(state.sitePhoto[0].caption,'Restored photo');
+});
+test('corrupt, oversized, and unknown-target uploads do not write photos',async()=>{
+ const token=await signedIn();
+ assert.equal((await route('photos').POST(photoUpload(new File(['<svg></svg>'],'fake.png',{type:'image/png'}),token))).status,400);
+ assert.equal((await route('photos').POST(photoUpload(new File([new Uint8Array(3_000_001)],'large.jpg',{type:'image/jpeg'}),token))).status,413);
+ assert.equal((await route('photos').POST(photoUpload(new File(['bad'],'bad.jpg'),token,'does-not-exist'))).status,404);
+ assert.equal(state.sitePhoto.length,0);
+});
+test('metadata changes to an original photo do not create a broken media URL',async()=>{
+ const token=await signedIn();const original=require('../src/data/photo-defaults.json')[0];
+ await route('photos').PATCH(request('photos','PATCH',{id:original.id,caption:'Updated caption',gallery:true},token));
+ const result=await (await route('photos').GET(request('photos','GET',null,token))).json();
+ assert.equal(result.photos.find(p=>p.id===original.id).src,original.src);
+});
+
+test('a photo can move to first without overwriting its image',async()=>{
+ const token=await signedIn();const originals=require('../src/data/photo-defaults.json').filter(p=>p.gallery);const original=originals[originals.length-1];
+ assert.equal((await route('photos').PATCH(request('photos','PATCH',{id:original.id,moveFirst:true},token))).status,200);
+ const result=await (await route('photos').GET(request('photos','GET',null,token))).json();assert.equal(result.photos[0].id,original.id);assert.equal(result.photos[0].src,original.src);
 });

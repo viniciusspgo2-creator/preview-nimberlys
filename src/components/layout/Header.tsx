@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Image from "next/image";
+import Image from "@/components/shared/SiteImage";
 import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CalendarCheck, ChevronDown, Clock, Globe, Mail, Menu, Phone, ShieldCheck, X } from "lucide-react";
