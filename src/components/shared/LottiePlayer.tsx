@@ -1,6 +1,6 @@
 "use client";
 
-import Lottie from "lottie-react";
+import { Lottie } from "lottie-react";
 import React from "react";
 
 /**
@@ -42,12 +42,11 @@ export function LottiePlayer({
   if (!data) return <div className={className} aria-hidden />;
   return (
     <Lottie
-      animationData={data}
+      src={data as Record<string, unknown>}
       loop={loop}
       autoplay={!reduce}
       className={className}
-      ariaLabel={ariaLabel}
-      interactive={false}
+      aria-label={ariaLabel}
     />
   );
 }

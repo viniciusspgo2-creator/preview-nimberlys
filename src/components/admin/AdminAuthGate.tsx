@@ -5,7 +5,7 @@ import { AdminSpinner } from "./admin-shared";
 import { LoginScreen } from "./LoginScreen";
 import { AdminShell } from "./AdminShell";
 
-type Status = "loading" | "authed" | "guest" | "setup";
+type Status = "loading" | "authed" | "guest" | "setup" | "error";
 
 /**
  * Client-side gate: checks GET /api/admin/me and renders either the
@@ -14,20 +14,25 @@ type Status = "loading" | "authed" | "guest" | "setup";
  * shared fetch helper on any 401) to flip back to login.
  */
 export function AdminAuthGate({ children }: { children: React.ReactNode }) {
+  const [error, setError] = React.useState("");
   const [status, setStatus] = React.useState<Status>("loading");
 
   React.useEffect(() => {
     let active = true;
     fetch("/api/admin/me", { credentials: "same-origin", cache: "no-store" })
-      .then((r) => r.json())
+      .then(async (r) => {
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || "Unable to load admin.");
+        return data;
+      })
       .then((d: { authed?: boolean; configured?: boolean }) => {
         if (!active) return;
         if (d.authed) setStatus("authed");
         else if (d.configured === false) setStatus("setup"); // first access
         else setStatus("guest");
       })
-      .catch(() => {
-        if (active) setStatus("guest");
+      .catch((err) => {
+        if (active) { setError(err instanceof Error ? err.message : "Unable to load admin."); setStatus("error"); }
       });
 
     const onUnauthorized = () => setStatus("guest");
@@ -37,6 +42,8 @@ export function AdminAuthGate({ children }: { children: React.ReactNode }) {
       window.removeEventListener("nimb:unauthorized", onUnauthorized);
     };
   }, []);
+
+  if (status === "error") return <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-cream p-6"><p role="alert" className="max-w-md text-center">{error}</p><button type="button" onClick={() => window.location.reload()} className="rounded-xl bg-white px-6 py-3">Try again</button></div>;
 
   if (status === "loading") {
     return (

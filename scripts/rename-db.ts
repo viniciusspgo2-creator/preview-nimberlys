@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 
 const db = new PrismaClient();
 
-const swap = (s: string | null | undefined) =>
+const swap = (s: string) =>
   s ? s.replace(/Day Care/g, "Daycare").replace(/DAY CARE/g, "DAYCARE") : s;
 
 async function main() {

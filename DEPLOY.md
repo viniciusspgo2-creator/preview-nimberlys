@@ -10,7 +10,7 @@ Guia completo, passo a passo. Tempo estimado: **15–20 minutos**.
 |---|---|
 | Banco de dados | ✅ **PostgreSQL** via Prisma (`env("DATABASE_URL")`) — nada de SQLite |
 | `postinstall: prisma generate` | ✅ Client gerado automaticamente a cada deploy |
-| `build: prisma generate && next build` | ✅ Padrão Vercel |
+| `build: prisma generate && baseline && migrate deploy && seed && next build` | ✅ Padrão Vercel |
 | Senha do admin | ✅ **Criada no primeiro acesso** (`/admin` → setup) — hash scrypt, sem senha padrão |
 | Chave do Gemini (chat) | ✅ Funciona via painel admin **ou** env var `GEMINI_API_KEY` |
 | Sessão admin | ✅ Cookie httpOnly assinado com HMAC (12h) — usa `ADMIN_SECRET` |
@@ -42,10 +42,10 @@ No terminal, na raiz do projeto:
 
 ```bash
 # 1. aplica o schema
-DATABASE_URL="cole_a_connection_string_aqui" bunx prisma db push
+DATABASE_URL="cole_a_connection_string_aqui" npx prisma db push
 
 # 2. semeia posts de blog, FAQs e configurações
-DATABASE_URL="cole_a_connection_string_aqui" bun run db:seed
+DATABASE_URL="cole_a_connection_string_aqui" npm run db:seed
 ```
 
 > 💡 O seed **não cria senha de admin** — a senha é criada por você no navegador no primeiro acesso (Passo 5).
@@ -103,10 +103,10 @@ Vercel → Project → **Settings → Domains** → adicione o domínio e siga a
 ## Desenvolvimento local (este sandbox)
 
 ```bash
-bun run db:up        # sobe PostgreSQL embutido (porta 5432) — já está rodando
-bun run dev          # site em http://localhost:3000
-bun run db:push      # aplica mudanças de schema
-bun run db:seed      # re-semeia conteúdo
+npm run db:up        # sobe PostgreSQL embutido (porta 5432) — já está rodando
+npm run dev          # site em http://localhost:3000
+npm run db:push      # aplica mudanças de schema
+npm run db:seed      # re-semeia conteúdo
 ```
 
 O `src/lib/db.ts` resolve a conexão automaticamente: usa `DATABASE_URL` quando for
@@ -117,3 +117,9 @@ PostgreSQL (Vercel/Neon) e cai para o Postgres local no desenvolvimento.
 `scripts/migrate-sqlite-data.ts` copiou todo o conteúdo do banco SQLite antigo
 (posts, FAQs, settings, mensagens, visualizações, logs do chat) para o PostgreSQL.
 O arquivo `db/custom.db` é mantido apenas como arquivo morto — pode ser arquivado.
+
+## Senha esquecida
+
+Alterar `ADMIN_SECRET` não altera a senha. Siga [RECUPERAR-ADMIN.md](RECUPERAR-ADMIN.md) para usar o novo fluxo de recuperação com `ADMIN_RESET_TOKEN`.
+
+Esta entrega usa npm e package-lock.json. Remova o bun.lock antigo ao atualizar o repositório.

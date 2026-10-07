@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
     "/api/admin/download-project": ["./assets/**"],
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   reactStrictMode: false,
 };

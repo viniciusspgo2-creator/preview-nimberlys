@@ -8,13 +8,15 @@
     "postinstall": "prisma generate",
     "start": "next start",
     "lint": "eslint .",
-    "db:up": "bun scripts/dev-db.ts",
+    "db:up": "tsx scripts/dev-db.ts",
     "zip": "node scripts/build-zip.mjs",
     "db:push": "prisma db push --accept-data-loss",
     "db:generate": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
     "db:migrate": "prisma migrate dev",
-    "db:reset": "prisma migrate reset"
+    "db:reset": "prisma migrate reset",
+    "typecheck": "tsc --noEmit",
+    "test:admin": "node --test tests/admin.test.cjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

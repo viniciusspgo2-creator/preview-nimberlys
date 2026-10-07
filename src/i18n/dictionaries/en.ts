@@ -223,8 +223,6 @@ export const en = {
   "contact.sending": "Sending...",
   "contact.success": "Thank you! We received your message and will get back to you soon.",
   "contact.error": "Something went wrong. Please try again or call us at (925) 848-8272.",
-  "contact.phone": "Phone",
-  "contact.email": "Email",
   "contact.address": "Address",
   "contact.hours": "Hours",
   "contact.ages": "Ages",

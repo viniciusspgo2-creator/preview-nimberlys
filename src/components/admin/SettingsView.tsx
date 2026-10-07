@@ -277,8 +277,9 @@ export function SettingsView() {
         body: JSON.stringify({ new_admin_password: newPw }),
       });
       toast.success("Password updated", {
-        description: "Use your new password next time you sign in.",
+        description: "Password updated. Please sign in again with your new password.",
       });
+      window.dispatchEvent(new Event("nimb:unauthorized"));
       setNewPw("");
       setConfirmPw("");
     } catch (err) {

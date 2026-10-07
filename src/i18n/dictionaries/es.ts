@@ -214,8 +214,6 @@ export const es = {
   "contact.sending": "Enviando...",
   "contact.success": "¡Gracias! Recibimos tu mensaje y te responderemos pronto.",
   "contact.error": "Algo salió mal. Inténtalo de nuevo o llámanos al (925) 848-8272.",
-  "contact.phone": "Teléfono",
-  "contact.email": "Correo electrónico",
   "contact.address": "Dirección",
   "contact.hours": "Horario",
   "contact.ages": "Edades",

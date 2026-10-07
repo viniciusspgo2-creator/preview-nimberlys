@@ -28,7 +28,7 @@ async function main() {
     port: PORT,
     persistent: true,
     onLog: () => {}, // keep the console clean
-    onError: (msg: string) => console.error("[pg]", msg),
+    onError: (msg: unknown) => console.error("[pg]", msg),
   });
 
   if (fresh) {

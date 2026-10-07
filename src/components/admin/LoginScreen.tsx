@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { RecoveryScreen } from "./RecoveryScreen";
 import { cn } from "@/lib/utils";
 
 type Mode = "login" | "setup";
@@ -37,6 +38,7 @@ export function LoginScreen({
   onSuccess: () => void;
 }) {
   const isSetup = mode === "setup";
+  const [recovery, setRecovery] = React.useState(false);
   const [password, setPassword] = React.useState("");
   const [confirm, setConfirm] = React.useState("");
   const [show, setShow] = React.useState(false);
@@ -91,6 +93,8 @@ export function LoginScreen({
       setBusy(false);
     }
   }
+
+  if (recovery) return <RecoveryScreen onBack={() => { setRecovery(false); setPassword(""); setConfirm(""); setError(null); }} />;
 
   const strengthBarColor =
     !strength || strength.score <= 1
@@ -183,6 +187,7 @@ export function LoginScreen({
                   }}
                   placeholder={isSetup ? "Create a password (min. 8 characters)" : "Admin password"}
                   autoComplete={isSetup ? "new-password" : "current-password"}
+                  maxLength={128}
                   autoFocus
                   className={cn(
                     "h-12 rounded-xl border-[#eadfcc] bg-cream-soft pl-10 pr-11 text-base",
@@ -301,6 +306,8 @@ export function LoginScreen({
               )}
             </Button>
           </motion.form>
+
+          {!isSetup && <button type="button" onClick={() => setRecovery(true)} className="mt-5 w-full text-center text-sm font-semibold text-brand underline">Forgot password?</button>}
 
           <p className="mt-6 text-center text-xs text-ink-faint">
             {isSetup

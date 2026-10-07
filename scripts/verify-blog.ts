@@ -1,4 +1,4 @@
-import { seedPosts } from "/home/z/my-project/src/data/seed/blog-posts.ts";
+import { seedPosts } from "../src/data/seed/blog-posts";
 
 const cats = new Set(["Choosing Child Care", "Parenting Tips", "Child Development", "Nutrition & Health", "Subsidies & Programs"]);
 const issues: string[] = [];

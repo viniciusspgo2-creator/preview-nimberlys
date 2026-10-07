@@ -26,7 +26,7 @@ export async function GET(req: Request) {
     const rows = await db.setting.findMany();
     const settings: Record<string, string> = {};
     for (const row of rows) {
-      if (row.key === "admin_password_hash" || row.key === "admin_secret") continue; // never expose
+      if (row.key.startsWith("admin_")) continue; // never expose
       settings[row.key] = row.value;
     }
 
@@ -56,7 +56,7 @@ export async function PUT(req: Request) {
 
     const writes: { key: string; value: string }[] = [];
     for (const [key, rawValue] of Object.entries(body)) {
-      if (PROTECTED_KEYS.has(key)) continue;
+      if (key.startsWith("admin_") || PROTECTED_KEYS.has(key)) continue;
       const value = typeof rawValue === "string" ? rawValue : String(rawValue ?? "");
       // Never blank an existing Gemini key — only overwrite with a new value.
       if (key === "gemini_api_key" && !value.trim()) continue;

@@ -214,8 +214,6 @@ export const fr = {
   "contact.sending": "Envoi en cours...",
   "contact.success": "Merci ! Nous avons bien reçu votre message et nous vous répondrons rapidement.",
   "contact.error": "Une erreur est survenue. Réessayez ou appelez-nous au (925) 848-8272.",
-  "contact.phone": "Téléphone",
-  "contact.email": "E-mail",
   "contact.address": "Adresse",
   "contact.hours": "Horaires",
   "contact.ages": "Âges",

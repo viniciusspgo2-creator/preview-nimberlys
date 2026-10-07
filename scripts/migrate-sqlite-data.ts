@@ -1,3 +1,4 @@
+/// <reference types="bun-types" />
 /**
  * One-time migration: legacy SQLite (sandbox) → PostgreSQL.
  *

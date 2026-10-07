@@ -112,7 +112,7 @@ function Logo() {
 /* ---------------- Header ---------------- */
 export function Header() {
   const pathname = usePathname();
-  const { t, lang } = useI18n();
+  const { t, lang, setLang } = useI18n();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
